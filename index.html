@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DILIGENT SCHOOL - Grade Pro V68</title>
+    <title>DILIGENT SCHOOL - Grade Pro V69</title>
     <style>
         :root { --primary: #1e40af; --success: #15803d; --danger: #b91c1c; --dark: #1e293b; }
         * { box-sizing: border-box; font-family: 'Segoe UI', 'Nyala', sans-serif; }
@@ -27,14 +27,17 @@
         th, td { border: 1px solid #000; padding: 8px; text-align: center; }
         th { background: #cbd5e1; position: sticky; top: 0; z-index: 5; }
 
-        .input-error { border: 2px solid var(--danger) !important; background: #fee2e2 !important; }
         #statusMsg { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 8px; color: white; display: none; z-index: 6000; font-weight: bold; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
         #cardModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; overflow: auto; padding: 20px; }
-        .card-wrapper { background: white; width: 1050px; margin: 0 auto; display: flex; border: 5px double #000; min-height: 700px; }
+        .card-wrapper { background: white; width: 1050px; margin: 0 auto; display: flex; border: 5px double #000; min-height: 800px; }
         .side { width: 50%; padding: 40px; display: flex; flex-direction: column; border: 1px solid #000; }
 
-        @media print { .no-print { display: none !important; } #cardModal { position: absolute; inset: 0; display: block; background: white; } .card-wrapper { width: 100%; border: 2px solid #000; } }
+        @media print { 
+            .no-print { display: none !important; } 
+            #cardModal { position: absolute; inset: 0; display: block; background: white; padding: 0; } 
+            .card-wrapper { width: 100%; border: 2px solid #000; min-height: 100vh; } 
+        }
     </style>
 </head>
 <body>
@@ -98,7 +101,7 @@
 </div>
 
 <script>
-    const KEY = 'DILIGENT_V68_STORAGE';
+    const KEY = 'DILIGENT_V69_STORAGE';
     const PASS_KEY = 'DILIGENT_PASS';
     let data = JSON.parse(localStorage.getItem(KEY)) || [];
     let history = [];
@@ -224,56 +227,84 @@
         const mode = document.getElementById('sys').value;
         const filteredData = data.filter(x => x.mode === mode);
         let rs = filteredData.filter(x=>x.name===name).sort((a,b)=>a.term-b.term);
+        
         const annualRank = getRank(rs.reduce((a,b)=>a+b.avg,0)/rs.length, [...new Set(filteredData.map(x=>x.name))].map(n => {
             let r = filteredData.filter(x=>x.name===n);
             return r.reduce((a,b)=>a+b.avg,0)/r.length;
         }));
 
+        const maxPeriods = mode === 'semester' ? 2 : 4;
+        let commentLines = "";
+        for(let i=1; i<=maxPeriods; i++) {
+            commentLines += `<div style="border-bottom:1px solid #000; margin-top:20px; height:20px; position:relative;">
+                <span style="position:absolute; left:0; top:-14px; color:#444; font-size:10px;">P-${i} Comment:</span>
+            </div>`;
+        }
+
         let html = `
         <div class="card-wrapper">
             <div class="side">
-                <div style="font-size:30px; font-weight:bold;">${document.getElementById('sch').value}</div>
-                <div style="font-weight:bold; border:2px solid #000; padding:10px; margin:20px 0; font-size:20px;">STUDENT REPORT CARD</div>
-                <div style="text-align:left; font-size:18px; line-height:3;">
-                    <div>NAME: <span style="border-bottom:1px solid #000; display:inline-block; width:70%; font-weight:bold;">${name}</span></div>
-                    <div>SEX: <span style="border-bottom:1px solid #000; display:inline-block; width:70%;">${rs[0].sex}</span></div>
-                    <div>GRADE: <span style="border-bottom:1px solid #000; display:inline-block; width:70%; font-weight:bold;">${document.getElementById('grd').value}</span></div>
-                    <div>YEAR: <span style="border-bottom:1px solid #000; display:inline-block; width:70%;">2018 E.C</span></div>
-                    <div style="margin-top:30px; font-weight:bold; border: 1px dashed #000; padding:10px;">
+                <div style="text-align:center;">
+                    <div style="font-size:28px; font-weight:bold;">${document.getElementById('sch').value}</div>
+                    <div style="font-weight:bold; border:2px solid #000; padding:10px; margin:15px auto; font-size:18px; width:90%;">STUDENT REPORT CARD</div>
+                </div>
+
+                <div style="text-align:left; font-size:17px; line-height:2.8; margin-top:20px;">
+                    <div>NAME: <span style="border-bottom:1px solid #000; display:inline-block; width:70%; font-weight:bold;"> &nbsp; ${name}</span></div>
+                    <div>SEX: <span style="border-bottom:1px solid #000; display:inline-block; width:70%;"> &nbsp; ${rs[0].sex}</span></div>
+                    <div>GRADE: <span style="border-bottom:1px solid #000; display:inline-block; width:70%; font-weight:bold;"> &nbsp; ${document.getElementById('grd').value}</span></div>
+                    <div>YEAR: <span style="border-bottom:1px solid #000; display:inline-block; width:70%;"> &nbsp; 2018 E.C</span></div>
+                    
+                    <div style="margin-top:40px; font-weight:bold; border: 1.5px dashed #000; padding:15px; line-height:1.6;">
                         Promoted to: <span style="border-bottom:1px solid #000; display:inline-block; width:45%;"></span> Grade
                         <br>
                         ወደ <span style="border-bottom:1px solid #000; display:inline-block; width:30%;"></span> ክፍል ተዘዋውሯል/ራለች
                     </div>
                 </div>
             </div>
+
             <div class="side">
-                <div style="text-align:center; margin-bottom:15px;">
-                    <div style="font-size:24px; font-weight:900; text-decoration: underline; text-underline-offset: 5px;">STUDENT'S ACADEMIC RECORD</div>
-                    <div style="font-size:14px; font-weight:bold; margin-top:5px; color:#444;">(${mode.toUpperCase()} REPORT)</div>
+                <div style="text-align:center; margin-bottom:12px;">
+                    <div style="font-size:18px; font-weight:900; text-decoration: underline; text-underline-offset: 4px;">STUDENT'S ACADEMIC RECORD</div>
                 </div>
 
-                <table style="width:100%; border-collapse:collapse; border:2px solid #000; font-size:14px;">
+                <table style="width:100%; border-collapse:collapse; border:1.8px solid #000; font-size:12px;">
                     <thead>
                         <tr>
-                            <th style="border:1px solid #000; padding:8px; background:#f0f0f0;">SUBJECTS</th>
+                            <th style="border:1px solid #000; padding:5px; background:#f0f0f0;">SUBJECTS</th>
                             ${rs.map(r=>`<th style="border:1px solid #000; background:#f0f0f0;">P-${r.term}</th>`).join('')}
-                            <th style="border:1px solid #000; background:#f0f0f0;">ANNUAL</th>
+                            <th style="border:1px solid #000; background:#f0f0f0;">ANN</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${subjects.map(s => `<tr><td style="border:1px solid #000; text-align:left; padding:6px; font-weight:bold;">${s}</td>${rs.map(r=>`<td style="border:1px solid #000;">${r.marks[s]||0}</td>`).join('')}<td style="border:1px solid #000; font-weight:bold;">${(rs.reduce((a,b)=>a+(b.marks[s]||0),0)/rs.length).toFixed(1)}</td></tr>`).join('')}
-                        <tr style="background:#eee; font-weight:bold;"><td style="border:1px solid #000;">AVERAGE (%)</td>${rs.map(r=>`<td style="border:1px solid #000;">${r.avg.toFixed(1)}%</td>`).join('')}<td style="border:1px solid #000;">${(rs.reduce((a,b)=>a+b.avg,0)/rs.length).toFixed(1)}%</td></tr>
-                        <tr style="font-weight:bold;"><td style="border:1px solid #000;">RANK / ደረጃ</td>${rs.map(r=>`<td style="border:1px solid #000;">${getRank(r.avg, filteredData.filter(x=>x.term===r.term).map(x=>x.avg))}</td>`).join('')}<td style="border:1px solid #000; background:#fff7ed;">${annualRank}</td></tr>
+                        ${subjects.map(s => `<tr><td style="border:1px solid #000; text-align:left; padding:4px; font-weight:bold;">${s}</td>${rs.map(r=>`<td style="border:1px solid #000;">${r.marks[s]||0}</td>`).join('')}<td style="border:1px solid #000; font-weight:bold;">${(rs.reduce((a,b)=>a+(b.marks[s]||0),0)/rs.length).toFixed(1)}</td></tr>`).join('')}
+                        
+                        <tr style="background:#f9f9f9; font-weight:bold;">
+                           <td style="border:1px solid #000;">TOTAL MARKS</td>
+                           ${rs.map(r=>(`<td style="border:1px solid #000;">${r.total.toFixed(0)}</td>`)).join('')}
+                           <td style="border:1px solid #000;">${(rs.reduce((a,b)=>a+b.total,0)/rs.length).toFixed(0)}</td>
+                        </tr>
+
+                        <tr style="background:#f9f9f9; font-weight:bold;">
+                           <td style="border:1px solid #000;">AVERAGE (%)</td>
+                           ${rs.map(r=>`<td style="border:1px solid #000;">${r.avg.toFixed(1)}%</td>`).join('')}
+                           <td style="border:1px solid #000;">${(rs.reduce((a,b)=>a+b.avg,0)/rs.length).toFixed(1)}%</td>
+                        </tr>
+
+                        <tr style="font-weight:bold;">
+                           <td style="border:1px solid #000;">RANK / ደረጃ</td>
+                           ${rs.map(r=>`<td style="border:1px solid #000;">${getRank(r.avg, filteredData.filter(x=>x.term===r.term).map(x=>x.avg))}</td>`).join('')}
+                           <td style="border:1px solid #000; background:#fffdfa;">${annualRank}</td>
+                        </tr>
                     </tbody>
                 </table>
                 
-                <div style="margin-top:20px; border:1px solid #000; padding:15px; height:120px; text-align:left;">
-                    <div style="font-weight:bold; margin-bottom:5px;">Teacher's Comment / የአስተማሪ አስተያየት:</div>
-                    <div style="border-bottom:1px solid #ccc; margin-top:15px; height:20px;"></div>
-                    <div style="border-bottom:1px solid #ccc; margin-top:15px; height:20px;"></div>
+                <div style="margin-top:20px; border:1px solid #000; padding:10px; min-height:160px; text-align:left;">
+                    <div style="font-weight:bold; margin-bottom:10px; font-size:13px; text-decoration:underline;">Teacher's Comment / የአስተማሪ አስተያየት:</div>
+                    ${commentLines}
                 </div>
 
-                <div style="margin-top:auto; font-weight:bold; display:flex; justify-content:space-between; padding-top:20px;">
+                <div style="margin-top:auto; font-weight:bold; display:flex; justify-content:space-between; padding-top:15px; font-size:12px;">
                     <div style="text-align:center;">Parent Signature<br>________________<br>የወላጅ ፊርማ</div>
                     <div style="text-align:center;">Director Signature<br>________________<br>የዳይሬክተር ፊርማ</div>
                 </div>
