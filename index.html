@@ -3,333 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DILIGENT SCHOOL - Grade Pro V69</title>
+    <title>DIA Grade Pro V99 - Final Master</title>
     <style>
-        :root { --primary: #1e40af; --success: #15803d; --danger: #b91c1c; --dark: #1e293b; }
+        :root { --primary: #1e40af; --success: #15803d; --danger: #b91c1c; --dark: #0f172a; --accent: #475569; }
         * { box-sizing: border-box; font-family: 'Segoe UI', 'Nyala', sans-serif; }
-        body { margin: 0; background: #f1f5f9; height: 100vh; display: flex; flex-direction: column; }
+        body { margin: 0; background: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        #loginScreen { position: fixed; inset: 0; background: var(--dark); z-index: 5000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; }
-        .login-box { background: white; padding: 30px; border-radius: 8px; color: #000; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        #loginOverlay { position: fixed; inset: 0; background: var(--dark); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 30px; border-radius: 8px; text-align: center; width: 90%; max-width: 350px; }
+        #appContent { display: none; height: 100vh; flex-direction: column; }
 
-        header { background: white; padding: 12px; border-bottom: 4px solid var(--primary); flex-shrink: 0; overflow-x: auto; }
-        .form-row { display: flex; gap: 10px; align-items: flex-end; width: max-content; padding-bottom: 5px; }
+        #entryForm { background: white; padding: 10px; border-bottom: 3px solid var(--primary); }
+        .form-row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 8px; }
         .field { display: flex; flex-direction: column; }
-        label { font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px; }
-        input, select { padding: 8px; border: 1.5px solid #000; border-radius: 4px; font-size: 14px; }
+        label { font-size: 10px; font-weight: bold; color: #64748b; }
+        input, select { padding: 6px; border: 1px solid #94a3b8; border-radius: 4px; font-size: 13px; outline: none; }
+        input.invalid { border: 2px solid var(--danger); background: #fef2f2; }
+
+        .actions { background: #e2e8f0; padding: 8px 15px; display: flex; gap: 8px; align-items: center; }
+        .btn { padding: 8px 14px; border: none; border-radius: 4px; color: white; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-blue { background: var(--primary); } .btn-green { background: var(--success); } .btn-red { background: var(--danger); }
+
+        main { flex: 1; overflow: auto; padding: 10px; }
+        #mainTable { border-collapse: collapse; width: 100%; font-size: 12px; background: white; min-width: 1300px; }
+        #mainTable td, #mainTable th { border: 1px solid #cbd5e1; padding: 8px; text-align: center; }
+        #mainTable th { background: #f8fafc; position: sticky; top: 0; z-index: 10; border-bottom: 3px solid var(--accent); }
         
-        .actions { background: #e2e8f0; padding: 10px 15px; display: flex; gap: 10px; align-items: center; border-bottom: 2px solid #000; overflow-x: auto; }
-        .btn { padding: 9px 16px; border: 1px solid #000; border-radius: 4px; color: white; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
-        .btn-blue { background: var(--primary); } .btn-green { background: var(--success); } .btn-red { background: var(--danger); } .btn-dark { background: var(--dark); }
+        .merged-cell { background: #ffffff; font-weight: bold; vertical-align: middle; }
+        .ann-row { background: #fff1f2; font-weight: bold; color: #b91c1c; }
 
-        main { flex: 1; overflow: auto; padding: 15px; }
-        table { border-collapse: collapse; width: 100%; font-size: 13px; background: white; border: 2px solid #000; }
-        th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-        th { background: #cbd5e1; position: sticky; top: 0; z-index: 5; }
+        #cardModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; overflow-y: auto; padding: 20px 10px; }
+        .report-card { background: #fff; width: 100%; max-width: 700px; margin: 0 auto; padding: 30px; border: 4px double #000; }
+        .card-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .card-table th, .card-table td { border: 1px solid #000; padding: 6px; text-align: center; font-size: 11px; }
+        .bilingual-label { display: block; font-size: 9px; color: #444; text-transform: uppercase; }
 
-        #statusMsg { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 8px; color: white; display: none; z-index: 6000; font-weight: bold; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-
-        #cardModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; overflow: auto; padding: 20px; }
-        .card-wrapper { background: white; width: 1050px; margin: 0 auto; display: flex; border: 5px double #000; min-height: 800px; }
-        .side { width: 50%; padding: 40px; display: flex; flex-direction: column; border: 1px solid #000; }
-
-        @media print { 
-            .no-print { display: none !important; } 
-            #cardModal { position: absolute; inset: 0; display: block; background: white; padding: 0; } 
-            .card-wrapper { width: 100%; border: 2px solid #000; min-height: 100vh; } 
-        }
+        @media print { .no-print { display: none; } #cardModal { position: absolute; background: white; } }
     </style>
 </head>
 <body>
 
-<div id="loginScreen">
+<div id="loginOverlay">
     <div class="login-box">
-        <h2>DILIGENT SCHOOL</h2>
-        <input type="password" id="passInput" placeholder="Password" style="width:100%; margin-bottom:15px; text-align:center;">
-        <button class="btn btn-blue" style="width:100%" onclick="checkLogin()">LOGIN</button>
+        <h2 style="color:var(--primary)">DIA SCHOOL SYSTEM</h2>
+        <input type="password" id="passInput" placeholder="Password" style="width: 100%; margin-bottom: 15px; padding: 12px;">
+        <button class="btn btn-blue" style="width: 100%;" onclick="checkPass()">LOGIN</button>
     </div>
 </div>
 
-<div id="statusMsg"></div>
-
-<header class="no-print">
-    <div class="form-row">
-        <div class="field"><label>School Name</label><input type="text" id="sch" value="ደሊጀንት አካዳሚ" style="width:150px"></div>
-        <div class="field"><label>Grade</label><input type="text" id="grd" value="8ኛ" style="width:50px"></div>
-        <div class="field">
-            <label>Report Type</label>
-            <select id="sys" onchange="init()" style="width:110px;">
-                <option value="semester">Semester</option>
-                <option value="quarter">Quarter</option>
-            </select>
+<div id="appContent">
+    <div id="entryForm">
+        <div class="form-row">
+            <div class="field"><label>School Name</label><input type="text" id="sch" value="DILIGENT INTELLECTUAL ACADEMIC SCHOOL" style="width:250px"></div>
+            <div class="field"><label>Mode</label><select id="sysMode" onchange="init()"><option value="semester">Semester</option><option value="quarter">Quarter</option></select></div>
+            <div class="field"><label>Grade / ክፍል</label><input type="text" id="grd" value="Grade 8" style="width:80px"></div>
+            <div class="field"><label>Subjects</label><input type="text" id="subjs" value="Math, English, Amharic, Science, Social, IT" style="width:180px"></div>
+            <button class="btn btn-blue" onclick="init()">⚙️ SETUP</button>
         </div>
-        <div class="field"><label>Subjects</label><input type="text" id="subjs" value="Math, Amharic, English, Science, Social" style="width:200px"></div>
-        <button class="btn btn-blue" onclick="init()">⚙️ SETUP</button>
+        <div class="form-row" style="margin-top:8px; border-top:1px solid #ddd; padding-top:8px;">
+            <input type="hidden" id="ekey" value="-1">
+            <div class="field"><label>No</label><input type="number" id="sn" style="width:45px;"></div>
+            <div class="field"><label>Name</label><input type="text" id="nm" placeholder="Full Name" style="width:140px"></div>
+            <div class="field"><label>Sex</label><select id="sx"><option>M</option><option>F</option></select></div>
+            <div class="field"><label>Age</label><input type="number" id="age" style="width:45px;"></div>
+            <div class="field"><label>Term</label><select id="tm"></select></div>
+            <div id="marks" style="display:flex; gap:3px"></div>
+            <div class="field"><label>Conduct</label><select id="bhv"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+            <button class="btn btn-green" id="saveBtn" onclick="save()">💾 SAVE</button>
+        </div>
     </div>
-    <div id="entry" class="form-row" style="margin-top:10px; border-top: 1px solid #000; padding-top:10px;">
-        <input type="hidden" id="ekey" value="-1">
-        <div class="field"><label>No</label><input type="number" id="sn" value="1" style="width:45px"></div>
-        <div class="field"><label>Student Name</label><input type="text" id="nm" onkeydown="handleEnter(event, 'sx')" style="width:160px"></div>
-        <div class="field"><label>Sex</label><select id="sx" onkeydown="handleEnter(event, 'm_0')"><option>M</option><option>F</option></select></div>
-        <div class="field"><label>Period</label><select id="tm" onchange="focusFirstMark()"></select></div>
-        <div id="marks" style="display:flex; gap:5px"></div>
-        <button id="sBtn" class="btn btn-green" onclick="save()">💾 SAVE</button>
-    </div>
-</header>
 
-<div class="actions no-print">
-    <button class="btn btn-dark" onclick="backupData()">📥 BACKUP</button>
-    <button class="btn btn-dark" onclick="document.getElementById('fileIn').click()">📤 RESTORE</button>
-    <button class="btn btn-red" id="undoBtn" onclick="undo()" disabled>↩️ UNDO</button>
-    <input type="text" id="srch" placeholder="🔍 Search Name..." onkeyup="draw()" style="padding:8px; width:220px; border:1.5px solid #000; border-radius: 20px;">
-    <input type="file" id="fileIn" style="display:none" onchange="restoreData(event)">
+    <div class="actions">
+        <button class="btn btn-blue" onclick="backupData()">📥 BACKUP</button>
+        <button class="btn btn-red" id="undoBtn" onclick="undo()" disabled>↩️ UNDO</button>
+        <input type="text" id="srch" placeholder="🔍 Search..." onkeyup="draw()" style="padding:8px; border-radius:20px; width:200px; margin-left:auto; border:1px solid #94a3b8;">
+    </div>
+
+    <main><table id="mainTable"><thead id="thd"></thead><tbody id="tbd"></tbody></table></main>
 </div>
-
-<main>
-    <table id="mainTable">
-        <thead id="thd"></thead>
-        <tbody id="tbd"></tbody>
-    </table>
-</main>
 
 <div id="cardModal">
-    <div class="no-print" style="text-align: center; padding: 15px;">
-        <button class="btn btn-red" onclick="closeCard()">CLOSE</button>
-        <button class="btn btn-green" onclick="window.print()">🖨️ PRINT</button>
-    </div>
+    <div class="no-print" style="text-align: center; margin-bottom: 15px;"><button class="btn btn-blue" onclick="closeCard()">CLOSE</button> <button class="btn btn-green" onclick="window.print()">PRINT</button></div>
     <div id="cardContainer"></div>
 </div>
 
 <script>
-    const KEY = 'DILIGENT_V69_STORAGE';
-    const PASS_KEY = 'DILIGENT_PASS';
+    const KEY = 'DIA_DATA_V99';
+    const MASTER_PASS = "1234";
     let data = JSON.parse(localStorage.getItem(KEY)) || [];
-    let history = [];
-    let subjects = [];
+    let history = [], subjects = [];
 
-    function checkLogin() {
-        const input = document.getElementById('passInput').value;
-        if(input === (localStorage.getItem(PASS_KEY) || "1234")) {
-            document.getElementById('loginScreen').style.display = 'none';
+    function checkPass() {
+        if(document.getElementById('passInput').value === MASTER_PASS) {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('appContent').style.display = 'flex';
             init();
-        } else alert("Wrong Password!");
-    }
-
-    function showStatus(msg, type) {
-        const s = document.getElementById('statusMsg');
-        s.innerText = msg;
-        s.style.background = type === 'error' ? 'var(--danger)' : 'var(--success)';
-        s.style.display = 'block';
-        setTimeout(() => { s.style.display = 'none'; }, 3000);
+        }
     }
 
     function init() {
         subjects = document.getElementById('subjs').value.split(',').map(s=>s.trim()).filter(s=>s);
-        const mode = document.getElementById('sys').value;
-        const tm = document.getElementById('tm');
-        tm.innerHTML = "";
-        const count = mode === 'semester' ? 2 : 4;
-        for(let i=1; i<=count; i++) tm.innerHTML += `<option value="${i}">${mode==='semester'?'Sem':'Quar'} ${i}</option>`;
-        renderMarkInputs();
+        const mode = document.getElementById('sysMode').value;
+        document.getElementById('tm').innerHTML = (mode === "semester") 
+            ? `<option value="1">Sem 1</option><option value="2">Sem 2</option>` 
+            : `<option value="1">Q 1</option><option value="2">Q 2</option><option value="3">Q 3</option><option value="4">Q 4</option>`;
+        document.getElementById('marks').innerHTML = subjects.map((s, i) => 
+            `<input type="number" class="m-in" id="m_${i}" data-s="${s}" placeholder="${s[0]}" style="width:38px;" oninput="validateInput(this, ${i})">`
+        ).join('');
+        if(document.getElementById('ekey').value === "-1") document.getElementById('sn').value = getNextSN();
         draw();
     }
 
-    function renderMarkInputs() {
-        document.getElementById('marks').innerHTML = subjects.map((s, i) => 
-            `<div class="field"><label>${s}</label><input type="number" class="m-in" id="m_${i}" data-s="${s}" onfocus="this.select()" onkeydown="handleEnter(event, 'm_${i+1}')" style="width:55px; border:1.5px solid #000;"></div>`
-        ).join('');
-    }
-
-    function handleEnter(e, nextId) {
-        if (e.key === "Enter") {
-            const nextEl = document.getElementById(nextId);
-            if (nextEl) nextEl.focus();
-            else if (nextId.startsWith('m_')) document.getElementById('sBtn').focus();
+    function validateInput(input, index) {
+        let val = input.value;
+        if(val === "") return;
+        if(parseFloat(val) < 0 || parseFloat(val) > 100) input.classList.add('invalid');
+        else {
+            input.classList.remove('invalid');
+            if(val.length >= 2) {
+                if(index < subjects.length - 1) setTimeout(() => document.getElementById(`m_${index+1}`).focus(), 50);
+                else setTimeout(() => document.getElementById('saveBtn').focus(), 50);
+            }
         }
     }
 
-    function focusFirstMark() { document.getElementById('m_0')?.focus(); }
+    function getNextSN() {
+        const nos = data.map(x => parseFloat(x.no)).filter(n => !isNaN(n));
+        return nos.length === 0 ? 1 : Math.max(...nos) + 1;
+    }
 
     function save() {
-        const nm = document.getElementById('nm'), tm = document.getElementById('tm'), sn = document.getElementById('sn'), 
-              mode = document.getElementById('sys').value, ekey = document.getElementById('ekey').value;
-        let inputs = document.querySelectorAll('.m-in'), mks = {}, tot = 0, hasError = false;
+        const nm = document.getElementById('nm').value.trim();
+        const sn = document.getElementById('sn').value;
+        const age = document.getElementById('age').value;
+        const grd = document.getElementById('grd').value;
+        const mode = document.getElementById('sysMode').value;
+        const termVal = parseInt(document.getElementById('tm').value);
+        
+        let hasError = false;
+        document.querySelectorAll('.m-in').forEach(i => { if(i.value === "" || i.classList.contains('invalid')) hasError = true; });
 
-        if(!nm.value.trim()) { showStatus("⚠️ Name required!", "error"); nm.focus(); return; }
+        if(!nm || !sn || !age || hasError) { alert("Please check all fields!"); return; }
 
-        inputs.forEach(i => {
-            let val = parseFloat(i.value.trim());
-            if(isNaN(val) || val > 100 || val < 0) {
-                showStatus(`❌ Check ${i.dataset.s} (0-100)`, "error");
-                i.focus(); hasError = true;
-            } else { mks[i.dataset.s] = val; tot += val; }
-        });
-
-        if(hasError) return;
-
+        let mks = {}, tot = 0;
+        document.querySelectorAll('.m-in').forEach(i => { let v = parseFloat(i.value); mks[i.dataset.s] = v; tot += v; });
+        
         history.push(JSON.stringify(data));
         document.getElementById('undoBtn').disabled = false;
 
-        const obj = { id: ekey==="-1"?Date.now():parseFloat(ekey), no:sn.value, name:nm.value.trim(), sex:document.getElementById('sx').value, term:parseInt(tm.value), marks:mks, total:tot, avg:tot/subjects.length, mode:mode };
+        const ekey = document.getElementById('ekey').value;
+        const obj = { id: ekey==="-1"?Date.now():parseFloat(ekey), no: sn, name: nm, sex: document.getElementById('sx').value, age: age, grade: grd, mode: mode, term: termVal, marks: mks, behavior: document.getElementById('bhv').value, total: tot, avg: tot/subjects.length };
         
         if(ekey==="-1") data.push(obj); 
-        else data[data.findIndex(x=>x.id==ekey)] = obj;
+        else { data[data.findIndex(x=>x.id==ekey)] = obj; document.getElementById('ekey').value="-1"; }
         
         localStorage.setItem(KEY, JSON.stringify(data)); 
         draw();
-        showStatus("✅ Saved!", "success");
-
-        inputs.forEach(i => i.value = "");
-        if(ekey === "-1") {
-            const maxP = mode === 'semester' ? 2 : 4;
-            if(parseInt(tm.value) < maxP) { tm.value++; focusFirstMark(); }
-            else { nm.value = ""; tm.value = "1"; sn.value++; nm.focus(); }
+        
+        document.querySelectorAll('.m-in').forEach(i => i.value = "");
+        const maxTerms = (mode === "semester") ? 2 : 4;
+        if(termVal < maxTerms) {
+            document.getElementById('tm').value = termVal + 1;
+            document.getElementById('m_0').focus();
         } else {
-            document.getElementById('ekey').value="-1"; document.getElementById('sBtn').innerText="💾 SAVE"; nm.value = ""; nm.focus();
+            document.getElementById('nm').value = ""; document.getElementById('age').value = "";
+            document.getElementById('sn').value = getNextSN(); document.getElementById('tm').value = 1;
+            document.getElementById('nm').focus();
         }
     }
 
-    function getRank(avg, allAvgs) {
-        if(!allAvgs.length) return "-";
-        const sorted = [...new Set(allAvgs)].sort((a,b) => b-a);
+    function getRank(avg, list) {
+        if (!list || list.length === 0) return "--";
+        const sorted = [...new Set(list)].sort((a,b)=>b-a);
         return sorted.indexOf(avg) + 1;
     }
 
     function draw() {
-        const b = document.getElementById('tbd'), q = document.getElementById('srch').value.toLowerCase(), mode = document.getElementById('sys').value;
-        document.getElementById('thd').innerHTML = `<tr><th>No</th><th>Name</th><th>Sex</th><th>Period</th>${subjects.map(s=>`<th>${s}</th>`).join('')}<th>Total</th><th>Avg</th><th>Rank</th><th class="no-print">Action</th></tr>`;
+        const b = document.getElementById('tbd'), mode = document.getElementById('sysMode').value;
+        const label = (mode === "semester") ? "Sem" : "Q";
+        document.getElementById('thd').innerHTML = `<tr><th>No</th><th>Name</th><th>Sex</th><th>Age</th><th>Grade</th><th>Term</th>${subjects.map(s=>`<th>${s}</th>`).join('')}<th>Total</th><th>Avg</th><th>Rank</th><th>Actions</th></tr>`;
         
-        const filteredData = data.filter(x => x.mode === mode);
-        const names = [...new Set(filteredData.map(x=>x.name))].filter(n => n.toLowerCase().includes(q));
-        const allAnnualAvgs = names.map(n => {
-            let rs = filteredData.filter(x=>x.name===n);
-            return rs.reduce((a,b)=>a+b.avg,0)/rs.length;
-        });
-
+        const names = [...new Set(data.filter(x => x.mode === mode).map(x=>x.name))];
         b.innerHTML = "";
+        
         names.forEach(n => {
-            let rs = filteredData.filter(x=>x.name===n).sort((a,b)=>a.term-b.term);
-            let annAvg = rs.reduce((a,b)=>a+b.avg,0)/rs.length;
-            let annRank = getRank(annAvg, allAnnualAvgs);
-
-            rs.forEach((r, idx) => {
-                const termRank = getRank(r.avg, filteredData.filter(x=>x.term===r.term).map(x=>x.avg));
-                let span = idx===0 ? `<td rowspan="${rs.length+1}">${r.no}</td><td rowspan="${rs.length+1}" style="text-align:left; font-weight:bold">${r.name}</td><td rowspan="${rs.length+1}">${r.sex}</td>` : "";
-                b.innerHTML += `<tr>${span}<td>P-${r.term}</td>${subjects.map(s=>`<td>${r.marks[s]||0}</td>`).join('')}<td>${r.total.toFixed(1)}</td><td>${r.avg.toFixed(1)}%</td><td>${termRank}</td><td class="no-print">
-                    <button onclick="edit(${r.id})">✏️</button> <button class="btn-red" onclick="del(${r.id})">🗑️</button>
-                </td></tr>`;
+            const stuData = data.filter(x=>x.name===n && x.mode === mode).sort((a,b)=>a.term-b.term);
+            const rowCount = stuData.length + 1;
+            
+            stuData.forEach((r, idx) => {
+                const termList = data.filter(x=>x.term===r.term && x.mode === mode).map(x=>x.avg);
+                let row = `<tr>`;
+                if(idx === 0) row += `<td rowspan="${rowCount}">${r.no}</td><td rowspan="${rowCount}" style="text-align:left"><b>${r.name}</b></td><td rowspan="${rowCount}">${r.sex}</td><td rowspan="${rowCount}">${r.age}</td><td rowspan="${rowCount}">${r.grade}</td>`;
+                row += `<td>${label} ${r.term}</td>${subjects.map(s=>`<td>${r.marks[s]||0}</td>`).join('')}<td>${r.total.toFixed(1)}</td><td>${r.avg.toFixed(1)}%</td><td>${getRank(r.avg, termList)}</td>
+                <td><button onclick="edit(${r.id})">✏️</button> <button onclick="del(${r.id})">🗑️</button></td></tr>`;
+                b.innerHTML += row;
             });
-            b.innerHTML += `<tr style="background:#eee; font-weight:bold"><td>ANNUAL</td>${subjects.map(s=>`<td>${(rs.reduce((a,b)=>a+(b.marks[s]||0),0)/rs.length).toFixed(1)}</td>`).join('')}<td>${(rs.reduce((a,b)=>a+b.total,0)/rs.length).toFixed(1)}</td><td>${annAvg.toFixed(1)}%</td><td>${annRank}</td><td class="no-print"><button class="btn btn-blue" onclick="showCard('${n}')">🗂️ CARD</button></td></tr>`;
+            
+            const annRankList = names.map(nm => {
+                const d = data.filter(x => x.name === nm && x.mode === mode);
+                return d.reduce((s, r) => s + r.avg, 0) / d.length;
+            });
+            const aAvg = stuData.reduce((s,r)=>s+r.avg,0)/stuData.length;
+            const aTot = stuData.reduce((s,r)=>s+r.total,0)/stuData.length;
+
+            // Aligned Annual Row
+            let annRow = `<tr class="ann-row"><td>ANNUAL</td>`;
+            subjects.forEach(s => {
+                annRow += `<td>${(stuData.reduce((sum,r)=>sum+(r.marks[s]||0),0)/stuData.length).toFixed(1)}</td>`;
+            });
+            annRow += `<td>${aTot.toFixed(1)}</td><td>${aAvg.toFixed(1)}%</td><td>${getRank(aAvg, annRankList)}</td><td><button class="btn btn-blue" style="padding:2px 5px" onclick="showCard('${n}')">CARD</button></td></tr>`;
+            b.innerHTML += annRow;
         });
     }
 
     function showCard(name) {
-        const mode = document.getElementById('sys').value;
-        const filteredData = data.filter(x => x.mode === mode);
-        let rs = filteredData.filter(x=>x.name===name).sort((a,b)=>a.term-b.term);
+        const mode = document.getElementById('sysMode').value;
+        const stuData = data.filter(x => x.name === name && x.mode === mode).sort((a,b)=>a.term-b.term);
+        const aAvg = stuData.reduce((s,r)=>s+r.avg,0)/stuData.length;
+        const aTot = stuData.reduce((s,r)=>s+r.total,0)/stuData.length;
+        const termCols = (mode === "semester") ? [1, 2] : [1, 2, 3, 4];
         
-        const annualRank = getRank(rs.reduce((a,b)=>a+b.avg,0)/rs.length, [...new Set(filteredData.map(x=>x.name))].map(n => {
-            let r = filteredData.filter(x=>x.name===n);
-            return r.reduce((a,b)=>a+b.avg,0)/r.length;
-        }));
+        const annRankList = [...new Set(data.filter(x => x.mode === mode).map(x => x.name))].map(nm => {
+            const d = data.filter(x => x.name === nm && x.mode === mode);
+            return d.reduce((s, r) => s + r.avg, 0) / d.length;
+        });
 
-        const maxPeriods = mode === 'semester' ? 2 : 4;
-        let commentLines = "";
-        for(let i=1; i<=maxPeriods; i++) {
-            commentLines += `<div style="border-bottom:1px solid #000; margin-top:20px; height:20px; position:relative;">
-                <span style="position:absolute; left:0; top:-14px; color:#444; font-size:10px;">P-${i} Comment:</span>
-            </div>`;
-        }
-
-        let html = `
-        <div class="card-wrapper">
-            <div class="side">
-                <div style="text-align:center;">
-                    <div style="font-size:28px; font-weight:bold;">${document.getElementById('sch').value}</div>
-                    <div style="font-weight:bold; border:2px solid #000; padding:10px; margin:15px auto; font-size:18px; width:90%;">STUDENT REPORT CARD</div>
+        document.getElementById('cardContainer').innerHTML = `
+            <div class="report-card">
+                <center><h2>${document.getElementById('sch').value}</h2><h3>PROGRESS REPORT CARD / የተማሪ ውጤት መግለጫ</h3></center>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:20px 0; font-weight:bold; font-size:12px">
+                    <div><span class="bilingual-label">Name / ስም</span> ${name}</div>
+                    <div><span class="bilingual-label">Sex / ጾታ</span> ${stuData[0].sex}</div>
+                    <div><span class="bilingual-label">Age / ዕድሜ</span> ${stuData[0].age}</div>
+                    <div><span class="bilingual-label">ID No / መለያ ቁጥር</span> ${stuData[0].no}</div>
+                    <div><span class="bilingual-label">Grade / ክፍል</span> ${stuData[0].grade}</div>
+                    <div><span class="bilingual-label">Academic Year</span> 2018 E.C</div>
                 </div>
-
-                <div style="text-align:left; font-size:17px; line-height:2.8; margin-top:20px;">
-                    <div>NAME: <span style="border-bottom:1px solid #000; display:inline-block; width:70%; font-weight:bold;"> &nbsp; ${name}</span></div>
-                    <div>SEX: <span style="border-bottom:1px solid #000; display:inline-block; width:70%;"> &nbsp; ${rs[0].sex}</span></div>
-                    <div>GRADE: <span style="border-bottom:1px solid #000; display:inline-block; width:70%; font-weight:bold;"> &nbsp; ${document.getElementById('grd').value}</span></div>
-                    <div>YEAR: <span style="border-bottom:1px solid #000; display:inline-block; width:70%;"> &nbsp; 2018 E.C</span></div>
-                    
-                    <div style="margin-top:40px; font-weight:bold; border: 1.5px dashed #000; padding:15px; line-height:1.6;">
-                        Promoted to: <span style="border-bottom:1px solid #000; display:inline-block; width:45%;"></span> Grade
-                        <br>
-                        ወደ <span style="border-bottom:1px solid #000; display:inline-block; width:30%;"></span> ክፍል ተዘዋውሯል/ራለች
-                    </div>
-                </div>
-            </div>
-
-            <div class="side">
-                <div style="text-align:center; margin-bottom:12px;">
-                    <div style="font-size:18px; font-weight:900; text-decoration: underline; text-underline-offset: 4px;">STUDENT'S ACADEMIC RECORD</div>
-                </div>
-
-                <table style="width:100%; border-collapse:collapse; border:1.8px solid #000; font-size:12px;">
+                <table class="card-table">
                     <thead>
-                        <tr>
-                            <th style="border:1px solid #000; padding:5px; background:#f0f0f0;">SUBJECTS</th>
-                            ${rs.map(r=>`<th style="border:1px solid #000; background:#f0f0f0;">P-${r.term}</th>`).join('')}
-                            <th style="border:1px solid #000; background:#f0f0f0;">ANN</th>
-                        </tr>
+                        <tr><th rowspan="2">SUBJECTS / የትምህርት ዓይነቶች</th><th colspan="${termCols.length}">TERM / ተርም</th><th rowspan="2">ANNUAL / ዓመታዊ</th></tr>
+                        <tr>${termCols.map(t=>`<th>${t}</th>`).join('')}</tr>
                     </thead>
                     <tbody>
-                        ${subjects.map(s => `<tr><td style="border:1px solid #000; text-align:left; padding:4px; font-weight:bold;">${s}</td>${rs.map(r=>`<td style="border:1px solid #000;">${r.marks[s]||0}</td>`).join('')}<td style="border:1px solid #000; font-weight:bold;">${(rs.reduce((a,b)=>a+(b.marks[s]||0),0)/rs.length).toFixed(1)}</td></tr>`).join('')}
-                        
-                        <tr style="background:#f9f9f9; font-weight:bold;">
-                           <td style="border:1px solid #000;">TOTAL MARKS</td>
-                           ${rs.map(r=>(`<td style="border:1px solid #000;">${r.total.toFixed(0)}</td>`)).join('')}
-                           <td style="border:1px solid #000;">${(rs.reduce((a,b)=>a+b.total,0)/rs.length).toFixed(0)}</td>
-                        </tr>
-
-                        <tr style="background:#f9f9f9; font-weight:bold;">
-                           <td style="border:1px solid #000;">AVERAGE (%)</td>
-                           ${rs.map(r=>`<td style="border:1px solid #000;">${r.avg.toFixed(1)}%</td>`).join('')}
-                           <td style="border:1px solid #000;">${(rs.reduce((a,b)=>a+b.avg,0)/rs.length).toFixed(1)}%</td>
-                        </tr>
-
-                        <tr style="font-weight:bold;">
-                           <td style="border:1px solid #000;">RANK / ደረጃ</td>
-                           ${rs.map(r=>`<td style="border:1px solid #000;">${getRank(r.avg, filteredData.filter(x=>x.term===r.term).map(x=>x.avg))}</td>`).join('')}
-                           <td style="border:1px solid #000; background:#fffdfa;">${annualRank}</td>
-                        </tr>
+                        ${subjects.map(s=> `<tr><td style="text-align:left; font-weight:bold">${s}</td>${termCols.map(t=> `<td>${stuData.find(r=>r.term==t)?.marks[s] || '-'}</td>`).join('')}<td>${(stuData.reduce((sum,r)=>sum+(r.marks[s]||0),0)/stuData.length).toFixed(1)}</td></tr>`).join('')}
+                        <tr style="font-weight:bold; background:#eee"><td>TOTAL / ድምር</td>${termCols.map(t=> `<td>${stuData.find(r=>r.term==t)?.total.toFixed(1) || '-'}</td>`).join('')}<td>${aTot.toFixed(1)}</td></tr>
+                        <tr style="font-weight:bold; background:#eee"><td>AVERAGE / አማካይ (%)</td>${termCols.map(t=> `<td>${stuData.find(r=>r.term==t)?.avg.toFixed(1) || '-'}%</td>`).join('')}<td>${aAvg.toFixed(1)}%</td></tr>
+                        <tr style="font-weight:bold"><td>RANK / ደረጃ</td>${termCols.map(t=> {
+                            const tD = stuData.find(r=>r.term==t);
+                            const tL = data.filter(x=>x.term==t && x.mode==mode).map(x=>x.avg);
+                            return `<td>${tD ? getRank(tD.avg, tL) : '-'}</td>`;
+                        }).join('')}<td>${getRank(aAvg, annRankList)}</td></tr>
+                        <tr><td>CONDUCT / ጠባይ</td>${termCols.map(t=> `<td>${stuData.find(r=>r.term==t)?.behavior || '-'}</td>`).join('')}<td>-</td></tr>
                     </tbody>
                 </table>
-                
-                <div style="margin-top:20px; border:1px solid #000; padding:10px; min-height:160px; text-align:left;">
-                    <div style="font-weight:bold; margin-bottom:10px; font-size:13px; text-decoration:underline;">Teacher's Comment / የአስተማሪ አስተያየት:</div>
-                    ${commentLines}
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:11px; font-weight:bold">
+                    <span>Parent's Sign / የወላጅ ፊርማ: _________</span><span>Teacher's Sign / መምህር: _________</span><span>Director / ርዕሰ መምህር: _________</span>
                 </div>
-
-                <div style="margin-top:auto; font-weight:bold; display:flex; justify-content:space-between; padding-top:15px; font-size:12px;">
-                    <div style="text-align:center;">Parent Signature<br>________________<br>የወላጅ ፊርማ</div>
-                    <div style="text-align:center;">Director Signature<br>________________<br>የዳይሬክተር ፊርማ</div>
-                </div>
-            </div>
-        </div>`;
-        document.getElementById('cardContainer').innerHTML = html;
-        document.getElementById('cardModal').style.display='block';
+            </div>`;
+        document.getElementById('cardModal').style.display = 'block';
     }
 
     function edit(id) {
         let r = data.find(x=>x.id==id);
-        document.getElementById('sys').value = r.mode;
-        init(); 
-        document.getElementById('sn').value=r.no; document.getElementById('nm').value=r.name; 
-        document.getElementById('sx').value=r.sex; document.getElementById('tm').value=r.term;
-        subjects.forEach((s, i) => document.getElementById(`m_${i}`).value = r.marks[s] || "");
-        document.getElementById('ekey').value=r.id; document.getElementById('sBtn').innerText="🔄 UPDATE"; focusFirstMark();
+        document.getElementById('ekey').value=r.id;
+        document.getElementById('nm').value=r.name; document.getElementById('sn').value=r.no;
+        document.getElementById('age').value=r.age; document.getElementById('sx').value=r.sex;
+        document.getElementById('tm').value=r.term; document.getElementById('grd').value=r.grade;
+        subjects.forEach((s, i) => document.getElementById(`m_${i}`).value = r.marks[s]);
+        document.getElementById('m_0').focus();
     }
 
-    function del(id) { if(prompt("Pass:")===(localStorage.getItem(PASS_KEY)||"1234")){ history.push(JSON.stringify(data)); data=data.filter(x=>x.id!==id); localStorage.setItem(KEY,JSON.stringify(data)); draw(); } }
-    function undo() { if(history.length && prompt("Pass:")===(localStorage.getItem(PASS_KEY)||"1234")){ data=JSON.parse(history.pop()); localStorage.setItem(KEY,JSON.stringify(data)); draw(); } }
+    function del(id) { if(confirm("Delete this record?")) { history.push(JSON.stringify(data)); data = data.filter(x => x.id !== id); localStorage.setItem(KEY, JSON.stringify(data)); draw(); } }
     function closeCard() { document.getElementById('cardModal').style.display='none'; }
-    function backupData() { const b = new Blob([JSON.stringify(data)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup.json`; a.click(); }
-    function restoreData(e) { const r = new FileReader(); r.onload = function(ev) { data = JSON.parse(ev.target.result); localStorage.setItem(KEY, JSON.stringify(data)); draw(); }; r.readAsText(e.target.files[0]); }
-    document.getElementById('passInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkLogin(); });
+    function backupData() { const b = new Blob([JSON.stringify(data)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `DIA_Data_Backup.json`; a.click(); }
+    function undo() { if(history.length){ data=JSON.parse(history.pop()); localStorage.setItem(KEY,JSON.stringify(data)); draw(); } }
 </script>
 </body>
 </html>
