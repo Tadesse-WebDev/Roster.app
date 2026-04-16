@@ -3,63 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>DIA Grade Pro - Styled Login</title>
+<title>DIA Grade Pro - Secure 1406</title>
 <style>
 :root{--p:#1e40af;--p-h:#1e3a8a;--s:#15803d;--d:#b91c1c;--bg:#f1f5f9}*{box-sizing:border-box;font-family:'Segoe UI',Nyala,sans-serif}
 body{margin:0;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden}
-
-/* የLogin ገጽ እና የርዕስ ማሻሻያ */
 #login{position:fixed;inset:0;background:linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;color:#fff}
-
-/* የርዕሱ ሳጥን (Header Box) */
-.login-header{
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px 40px;
-    border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    margin-bottom: 30px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
-.login-header h2{
-    margin: 0;
-    font-size: 32px;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
+.login-header{background: rgba(255, 255, 255, 0.1);padding: 15px 40px;border-radius: 15px;border: 2px solid rgba(255, 255, 255, 0.3);margin-bottom: 30px;backdrop-filter: blur(5px);box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2)}
+.login-header h2{margin: 0;font-size: 32px;letter-spacing: 2px;text-shadow: 2px 2px 4px rgba(0,0,0,0.3)}
 #login input{padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,0.2);margin:10px;width:280px;text-align:center;font-size:18px;outline:none;background:rgba(255,255,255,0.9);color:#333}
 .login-btn{padding:12px 50px;border-radius:30px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;font-size:16px;cursor:pointer;transition:all 0.3s ease;box-shadow: 0 4px 15px rgba(0,0,0,0.2);margin-top:20px}
 .login-btn:hover{background:#fff;color:var(--p);transform:translateY(-2px);box-shadow: 0 6px 20px rgba(0,0,0,0.3)}
-
 #app{display:none;flex-direction:column;height:100%}.top{background:#fff;padding:8px;border-bottom:3px solid var(--p)}.row{display:flex;gap:5px;align-items:flex-end;flex-wrap:wrap;margin-bottom:5px}.fld{display:flex;flex-direction:column}label{font-size:9px;font-weight:700;color:#64748b}input,select{padding:4px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:0}.bar{background:#e2e8f0;padding:8px;display:flex;gap:8px;align-items:center}.btn{padding:6px 12px;border:0;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:12px}main{flex:1;overflow:auto;padding:8px}table{border-collapse:collapse;background:#fff;width:auto;margin:0 auto;font-size:11px}th,td{border:1px solid #475569;padding:6px 8px;text-align:center;white-space:nowrap}th{background:#1e293b;color:#fff}.ann{background:#f0fdf4;font-weight:700;color:var(--p)}#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;overflow-y:auto;padding:10px}.card{background:#fff;width:210mm;min-height:297mm;margin:0 auto;padding:30px;border:3px solid #000;color:#000;text-align:center;display:flex;flex-direction:column;align-items:center}.fitted-box{display:inline-block;border:2px solid #000;padding:6px 15px;margin-bottom:10px;font-weight:700;font-size:18px}.i-g{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px auto;width:100%;max-width:750px;font-size:14px;border:2px solid #000;padding:12px;text-align:left}.c-t{width:100%;max-width:750px;margin:10px auto;border-collapse:collapse}.c-t td,.c-t th{border:2px solid #000;padding:8px;font-size:13px}.sig-wrap{margin-top:30px;display:flex;justify-content:space-around;width:100%;max-width:750px;border:2px solid #000;padding:20px 0}.sig-line{margin:15px auto 5px auto;border-bottom:1px dotted #000;width:80%;height:20px}@media print{.no-p{display:none!important}#modal{position:absolute;top:0;background:#fff;padding:0}.card{border:0;width:100%;margin:0}}
 </style>
 </head>
 <body>
 <div id="login">
-    <div class="login-header">
-        <h2>DIA Grade Pro system </h2>
-    </div>
+    <div class="login-header"><h2>DIA Grade Pro</h2></div>
     <input type="password" id="passInput" placeholder="ይለፍ ቃል / Password">
     <button class="login-btn" onclick="checkPass()">LOGIN / ክፈት</button>
 </div>
 <div id="app">
     <div class="top">
         <div class="row">
-            <input type="text" id="h_s" value="DILIGENT INTELLECTUALS ACADEMY" style="width:250px">
+            <input type="text" id="h_s" value="DILIGENT INTELLECTUALS ACADEMY" style="width:230px">
             <select id="h_m" onchange="init()"><option value="semester">Semester</option><option value="quarter">Quarter</option></select>
             <input type="text" id="h_g" value="Grade 4" style="width:70px">
-            <input type="text" id="h_b" value="Math, English, Amharic, Science, IT" style="width:230px">
+            <input type="text" id="h_b" value="Math, English, Amharic, Science, IT" style="width:200px">
             <button class="btn" style="background:var(--p)" onclick="init()">SETUP</button>
+            <button class="btn" style="background:#475569" onclick="changePass()">SET PASS 🔑</button>
             <button class="btn" style="background:var(--d)" onclick="location.reload()">LOCK 🔒</button>
         </div>
         <div class="row" style="border-top:1px solid #eee;padding-top:8px">
             <input type="hidden" id="e_k" value="-1">
             <div class="fld"><label>ተ.ቁ / No</label><input type="number" id="e_n" style="width:40px"></div>
             <div class="fld"><label>ስም / Name</label><input type="text" id="e_m" style="width:160px"></div>
-            <div class="fld"><label>ጾታ / Sex</label><select id="e_x"><option value="">-</option><option value="M">Male</option><option value="F">Female</option></select></div>
+            <div class="fld"><label>ጾታ / Sex</label><select id="e_x"><option value="">-</option><option value="M">M</option><option value="F">F</option></select></div>
             <div class="fld"><label>ዕድሜ / Age</label><input type="number" id="e_a" style="width:45px"></div>
-            <div class="fld"><label>Terms </label><select id="e_t"></select></div>
+            <div class="fld"><label>Term</label><select id="e_t"></select></div>
             <div class="fld"><label>ፀባይ / Cond.</label><select id="e_c"><option>A</option><option>B</option><option>C</option></select></div>
             <div id="mks" style="display:flex;gap:3px"></div>
             <button class="btn" style="background:var(--s)" id="svBtn" onclick="save()">SAVE</button>
@@ -75,15 +55,37 @@ body{margin:0;background:var(--bg);height:100vh;display:flex;flex-direction:colu
     <main><table><thead><tr id="th"></tr></thead><tbody id="tb"></tbody></table></main>
 </div>
 <div id="modal">
-    <div class="no-p" style="text-align:center;margin-bottom:10px">
-        <button class="btn" style="background:var(--d)" onclick="closeM()">CLOSE</button> 
-        <button class="btn" style="background:var(--s)" onclick="window.print()">PRINT</button>
-    </div>
+    <div class="no-p" style="text-align:center;margin-bottom:10px"><button class="btn" style="background:var(--d)" onclick="closeM()">CLOSE</button><button class="btn" style="background:var(--s)" onclick="window.print()">PRINT</button></div>
     <div id="cc"></div>
 </div>
 <script>
-const P="123",K='_DIA_DATA_V26';let D=JSON.parse(localStorage.getItem(K))||[],S=[],lastDeleted=null;
-function checkPass(){if(document.getElementById('passInput').value===P){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';init()}else{alert("የተሳሳተ ይለፍ ቃል!")}}
+// Default Hidden Password (አሁን 1406 ሆኗል)
+const _DEF_P = "\x31\x34\x30\x36"; 
+const K='_DIA_DATA_V29', PK='_DIA_PASS'; 
+let D=JSON.parse(localStorage.getItem(K))||[],S=[],lastDeleted=null;
+
+function checkPass(){
+    const input = document.getElementById('passInput').value;
+    const savedPass = localStorage.getItem(PK) || _DEF_P;
+    if(input === savedPass){
+        document.getElementById('login').style.display='none';
+        document.getElementById('app').style.display='flex';
+        init();
+    } else { alert("የተሳሳተ ይለፍ ቃል!"); }
+}
+
+function changePass(){
+    const current = localStorage.getItem(PK) || _DEF_P;
+    const old = prompt("የድሮውን ይለፍ ቃል ያስገቡ (Old Pass):");
+    if(old === current){
+        const nw = prompt("አዲሱን ይለፍ ቃል ያስገቡ (New Pass):");
+        if(nw && nw.length >= 4){
+            localStorage.setItem(PK, nw);
+            alert("ይለፍ ቃል ተቀይሯል! / Password Changed!");
+        } else { alert("ይለፍ ቃል ቢያንስ 4 ቁጥር መሆን አለበት!"); }
+    } else { alert("የድሮው ይለፍ ቃል ተሳስቷል!"); }
+}
+
 function init(){S=document.getElementById('h_b').value.split(',').map(x=>x.trim()).filter(x=>x);const m=document.getElementById('h_m').value;document.getElementById('e_t').innerHTML=m==='semester'?'<option value="1">S1</option><option value="2">S2</option>':'<option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option>';document.getElementById('mks').innerHTML=S.map((s,i)=>`<div class="fld"><label>${s}</label><input type="number" class="mi" id="m_${i}" data-s="${s}" oninput="if(this.value.length>=2) jump(${i})" style="width:45px;text-align:center"></div>`).join('');if(document.getElementById('e_k').value==="-1")document.getElementById('e_n').value=gn();render()}
 function jump(i){const nxt=document.getElementById(`m_${i+1}`);if(nxt)nxt.focus();else document.getElementById('svBtn').focus()}
 function gn(){const n=D.map(x=>parseFloat(x.no)).filter(v=>!isNaN(v));return n.length?Math.max(...n)+1:1}
@@ -94,7 +96,7 @@ function undo(){if(lastDeleted){D.push(lastDeleted);localStorage.setItem(K,JSON.
 function resetForm(){document.getElementById('e_k').value="-1";document.getElementById('e_m').value="";document.getElementById('e_x').value="";document.getElementById('e_a').value="";document.getElementById('e_t').value=1;document.querySelectorAll('.mi').forEach(i=>i.value="");document.getElementById('e_n').value=gn()}
 function render(){const b=document.getElementById('tb'),m=document.getElementById('h_m').value,f=document.getElementById('q').value.toLowerCase();document.getElementById('th').innerHTML=`<th>ተ.ቁ / No</th><th>ስም / Name</th><th>ጾታ / Sex</th><th>Term</th>${S.map(s=>`<th>${s}</th>`).join('')}<th>ጠቅላላ / Total</th><th>አማካይ / Avg</th><th>ደረጃ / Rk</th><th>Act</th>`;const ns=[...new Set(D.filter(x=>x.mode===m&&x.name.toLowerCase().includes(f)).map(x=>x.name))];b.innerHTML="";const al=ns.map(n=>{const d=D.filter(x=>x.name===n&&x.mode===m);return d.reduce((s,r)=>s+r.avg,0)/d.length});ns.forEach(n=>{const sd=D.filter(x=>x.name===n&&x.mode===m).sort((a,b)=>a.term-b.term),tr=sd.length+1;sd.forEach((r,i)=>{const tl=D.filter(x=>x.term===r.term&&x.mode===m).map(x=>x.avg);let rw=`<tr>`;if(i===0)rw+=`<td rowspan="${tr}">${r.no}</td><td rowspan="${tr}" style="text-align:left">${r.name}</td><td rowspan="${tr}">${r.sex}</td>`;rw+=`<td>T${r.term}</td>${S.map(s=>`<td>${r.marks[s]||0}</td>`).join('')}<td>${r.total.toFixed(0)}</td><td>${r.avg.toFixed(1)}</td><td>${gr(r.avg,tl)}</td><td><button onclick="edit(${r.id})">✏️</button><button onclick="del(${r.id})">🗑️</button></td></tr>`;b.innerHTML+=rw});const av=sd.reduce((s,r)=>s+r.avg,0)/sd.length,at=sd.reduce((s,r)=>s+r.total,0)/sd.length;b.innerHTML+=`<tr class="ann"><td><b>ANN</b></td>${S.map(s=>`<td>${(sd.reduce((u,r)=>u+(r.marks[s]||0),0)/sd.length).toFixed(0)}</td>`).join('')}<td>${at.toFixed(0)}</td><td>${av.toFixed(1)}</td><td>${gr(av,al)}</td><td><button class="btn" style="background:var(--p)" onclick="card('${n}')">CARD</button></td></tr>`})}
 function edit(id){const r=D.find(x=>x.id==id);document.getElementById('e_k').value=r.id;document.getElementById('e_m').value=r.name;document.getElementById('e_n').value=r.no;document.getElementById('e_x').value=r.sex;document.getElementById('e_a').value=r.age;document.getElementById('e_t').value=r.term;document.getElementById('e_c').value=r.conduct||'A';S.forEach((s,i)=>{if(document.getElementById(`m_${i}`))document.getElementById(`m_${i}`).value=r.marks[s]});render();document.getElementById('m_0').focus()}
-function card(n){const m=document.getElementById('h_m').value,sd=D.filter(x=>x.name===n&&x.mode===m).sort((a,b)=>a.term-b.term),tc=m==='semester'?[1,2]:[1,2,3,4],av=sd.reduce((s,r)=>s+r.avg,0)/sd.length,at=sd.reduce((s,r)=>s+r.total,0)/sd.length,al=[...new Set(D.filter(x=>x.mode===m).map(x=>x.name))].map(nm=>{const d=D.filter(x=>x.name===nm&&x.mode===m);return d.reduce((s,r)=>s+r.avg,0)/d.length});const ng=(parseInt(sd[0].grade.replace(/\D/g,''))||0)+1;const isF=sd[0].sex==='F';const promoText=av>=50?(isF?`ውጤቱ ከ50% በላይ በመሆኑ ወደ ${ng}ኛ ክፍል ተዘዋውራለች`:`ውጤቱ ከ50% በላይ በመሆኑ ወደ ${ng}ኛ ክፍል ተዘዋውሯል`):(isF?`ውጤቱ ከ50% በታች በመሆኑ አልተዘዋወረችም`:`ውጤቱ ከ50% በታች በመሆኑ አልተዘዋወረም`);document.getElementById('cc').innerHTML=`<div class="card"><div class="fitted-box">${document.getElementById('h_s').value}</div><br><div class="fitted-box" style="font-size:16px">STUDENT PROGRESS REPORT CARD (2018 E.C)</div><div class="i-g"><div>የተማሪው ስም / Name: <b>${n}</b></div><div>ጾታ / Sex: <b>${sd[0].sex}</b></div><div>ዕድሜ / Age: <b>${sd[0].age}</b></div><div>ክፍል / Grade: <b>${sd[0].grade}</b></div><div>መለያ ቁጥር / ID No: <b>${sd[0].no}</b></div><div>አማካይ / Avg: <b>${av.toFixed(1)}%</b></div></div><table class="c-t"><thead><tr><th style="width:200px">ትምህርቶች / SUBJECTS</th>${tc.map(t=>`<th>T${t}</th>`).join('')}<th>ዓመታዊ አማካይ / Ann. Avg</th></tr></thead><tbody>${S.map(s=>{const sc=(sd.reduce((u,r)=>u+(r.marks[s]||0),0)/sd.length).toFixed(1);return `<tr><td style="text-align:left"><b>${s}</b></td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.marks[s]??'-'}</td>`).join('')}<td><b>${sc}</b></td></tr>`}).join('')}<tr style="background:#eee;font-weight:700"><td>ጠቅላላ ውጤት / TOTAL SCORE</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.total.toFixed(0)??'-'}</td>`).join('')}<td>${at.toFixed(0)}</td></tr><tr style="background:#f9f9f9;font-weight:700"><td>አማካይ (%) / AVERAGE</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.avg.toFixed(1)??'-'}%</td>`).join('')}<td>${av.toFixed(1)}%</td></tr><tr style="font-weight:700"><td>ደረጃ / RANK</td>${tc.map(t=>`<td>${gr(sd.find(x=>x.term==t)?.avg,D.filter(x=>x.term==t&&x.mode==m).map(x=>x.avg))}</td>`).join('')}<td>${gr(av,al)}</td></tr><tr style="font-style:italic"><td>ፀባይ / CONDUCT</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.conduct??'-'}</td>`).join('')}<td>-</td></tr></tbody></table><div class="p-b">${promoText} (Promoted/Detained)</div><div class="sig-wrap"><div class="sig-box"><div class="sig-line"></div><div>የክፍል ተጠሪ መ/ር ፊርማ <br> Homeroom Teacher Sign</div></div><div class="sig-box"><div class="sig-line"></div><div>የርዕሰ መምህር ፊርማ <br> Principal Sign</div></div></div></div>`;document.getElementById('modal').style.display='block'}
+function card(n){const m=document.getElementById('h_m').value,sd=D.filter(x=>x.name===n&&x.mode===m).sort((a,b)=>a.term-b.term),tc=m==='semester'?[1,2]:[1,2,3,4],av=sd.reduce((s,r)=>s+r.avg,0)/sd.length,at=sd.reduce((s,r)=>s+r.total,0)/sd.length,al=[...new Set(D.filter(x=>x.mode===m).map(x=>x.name))].map(nm=>{const d=D.filter(x=>x.name===nm&&x.mode===m);return d.reduce((s,r)=>s+r.avg,0)/d.length});const ng=(parseInt(sd[0].grade.replace(/\D/g,''))||0)+1,isF=sd[0].sex==='F';const pT=av>=50?(isF?`ውጤቱ ከ50% በላይ በመሆኑ ወደ ${ng}ኛ ክፍል ተዘዋውራለች`:`ውጤቱ ከ50% በላይ በመሆኑ ወደ ${ng}ኛ ክፍል ተዘዋውሯል`):(isF?`ውጤቱ ከ50% በታች በመሆኑ አልተዘዋወረችም`:`ውጤቱ ከ50% በታች በመሆኑ አልተዘዋወረም`);document.getElementById('cc').innerHTML=`<div class="card"><div class="fitted-box">${document.getElementById('h_s').value}</div><br><div class="fitted-box" style="font-size:16px">STUDENT PROGRESS REPORT CARD (2018 E.C)</div><div class="i-g"><div>የተማሪው ስም / Name: <b>${n}</b></div><div>ጾታ / Sex: <b>${sd[0].sex}</b></div><div>ዕድሜ / Age: <b>${sd[0].age}</b></div><div>ክፍል / Grade: <b>${sd[0].grade}</b></div><div>መለያ ቁጥር / ID No: <b>${sd[0].no}</b></div><div>አማካይ / Avg: <b>${av.toFixed(1)}%</b></div></div><table class="c-t"><thead><tr><th style="width:200px">ትምህርቶች / SUBJECTS</th>${tc.map(t=>`<th>T${t}</th>`).join('')}<th>ዓመታዊ አማካይ / Ann. Avg</th></tr></thead><tbody>${S.map(s=>{const sc=(sd.reduce((u,r)=>u+(r.marks[s]||0),0)/sd.length).toFixed(1);return `<tr><td style="text-align:left"><b>${s}</b></td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.marks[s]??'-'}</td>`).join('')}<td><b>${sc}</b></td></tr>`}).join('')}<tr style="background:#eee;font-weight:700"><td>ጠቅላላ ውጤት / TOTAL SCORE</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.total.toFixed(0)??'-'}</td>`).join('')}<td>${at.toFixed(0)}</td></tr><tr style="background:#f9f9f9;font-weight:700"><td>አማካይ (%) / AVERAGE</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.avg.toFixed(1)??'-'}%</td>`).join('')}<td>${av.toFixed(1)}%</td></tr><tr style="font-weight:700"><td>ደረጃ / RANK</td>${tc.map(t=>`<td>${gr(sd.find(x=>x.term==t)?.avg,D.filter(x=>x.term==t&&x.mode==m).map(x=>x.avg))}</td>`).join('')}<td>${gr(av,al)}</td></tr><tr style="font-style:italic"><td>ፀባይ / CONDUCT</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.conduct??'-'}</td>`).join('')}<td>-</td></tr></tbody></table><div class="p-b">${pT} (Promoted/Detained)</div><div class="sig-wrap"><div class="sig-box"><div class="sig-line"></div><div>የክፍል ተጠሪ መ/ር ፊርማ <br> Homeroom Teacher Sign</div></div><div class="sig-box"><div class="sig-line"></div><div>የርዕሰ መምህር ፊርማ <br> Principal Sign</div></div></div></div>`;document.getElementById('modal').style.display='block'}
 function closeM(){document.getElementById('modal').style.display='none'}
 function exportData(){const b=new Blob([JSON.stringify(D)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`DIA_Backup.json`;a.click()}
 </script>
