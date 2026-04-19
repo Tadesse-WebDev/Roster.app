@@ -3,102 +3,429 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>DIA Grade Pro - Secure 1406</title>
+<title>DIA Grade Pro - Full Version</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
-:root{--p:#1e40af;--p-h:#1e3a8a;--s:#15803d;--d:#b91c1c;--bg:#f1f5f9}*{box-sizing:border-box;font-family:'Segoe UI',Nyala,sans-serif}
+:root{--p:#1e40af;--s:#15803d;--d:#b91c1c;--bg:#f1f5f9;--err:#fee2e2}*{box-sizing:border-box;font-family:Nyala, 'Segoe UI', sans-serif}
 body{margin:0;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden}
-#login{position:fixed;inset:0;background:linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;color:#fff}
-.login-header{background: rgba(255, 255, 255, 0.1);padding: 15px 40px;border-radius: 15px;border: 2px solid rgba(255, 255, 255, 0.3);margin-bottom: 30px;backdrop-filter: blur(5px);box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2)}
-.login-header h2{margin: 0;font-size: 32px;letter-spacing: 2px;text-shadow: 2px 2px 4px rgba(0,0,0,0.3)}
-#login input{padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,0.2);margin:10px;width:280px;text-align:center;font-size:18px;outline:none;background:rgba(255,255,255,0.9);color:#333}
-.login-btn{padding:12px 50px;border-radius:30px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;font-size:16px;cursor:pointer;transition:all 0.3s ease;box-shadow: 0 4px 15px rgba(0,0,0,0.2);margin-top:20px}
-.login-btn:hover{background:#fff;color:var(--p);transform:translateY(-2px);box-shadow: 0 6px 20px rgba(0,0,0,0.3)}
-#app{display:none;flex-direction:column;height:100%}.top{background:#fff;padding:8px;border-bottom:3px solid var(--p)}.row{display:flex;gap:5px;align-items:flex-end;flex-wrap:wrap;margin-bottom:5px}.fld{display:flex;flex-direction:column}label{font-size:9px;font-weight:700;color:#64748b}input,select{padding:4px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:0}.bar{background:#e2e8f0;padding:8px;display:flex;gap:8px;align-items:center}.btn{padding:6px 12px;border:0;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:12px}main{flex:1;overflow:auto;padding:8px}table{border-collapse:collapse;background:#fff;width:auto;margin:0 auto;font-size:11px}th,td{border:1px solid #475569;padding:6px 8px;text-align:center;white-space:nowrap}th{background:#1e293b;color:#fff}.ann{background:#f0fdf4;font-weight:700;color:var(--p)}#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;overflow-y:auto;padding:10px}.card{background:#fff;width:210mm;min-height:297mm;margin:0 auto;padding:30px;border:3px solid #000;color:#000;text-align:center;display:flex;flex-direction:column;align-items:center}.fitted-box{display:inline-block;border:2px solid #000;padding:6px 15px;margin-bottom:10px;font-weight:700;font-size:18px}.i-g{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px auto;width:100%;max-width:750px;font-size:14px;border:2px solid #000;padding:12px;text-align:left}.c-t{width:100%;max-width:750px;margin:10px auto;border-collapse:collapse}.c-t td,.c-t th{border:2px solid #000;padding:8px;font-size:13px}.sig-wrap{margin-top:30px;display:flex;justify-content:space-around;width:100%;max-width:750px;border:2px solid #000;padding:20px 0}.sig-line{margin:15px auto 5px auto;border-bottom:1px dotted #000;width:80%;height:20px}@media print{.no-p{display:none!important}#modal{position:absolute;top:0;background:#fff;padding:0}.card{border:0;width:100%;margin:0}}
+
+/* UI ክፍሎች */
+#login{position:fixed;inset:0;background:linear-gradient(45deg, #1e3a8a 0%, #3b82f6 100%);display:flex;align-items:center;justify-content:center;z-index:10000}
+.login-box{background:rgba(255,255,255,0.15);padding:40px;border-radius:20px;border:2px solid rgba(255,255,255,0.5);backdrop-filter:blur(15px);box-shadow:0 20px 40px rgba(0,0,0,0.4);text-align:center;color:#fff;width:360px}
+#login input{padding:12px;border-radius:8px;border:none;margin:15px 0;width:100%;text-align:center;font-size:18px;background:#fff;color:#1e3a8a;font-weight:700}
+.login-btn{padding:10px 0;width:100%;border-radius:30px;border:none;background:#fff;color:#1e3a8a;font-weight:700;cursor:pointer;font-size:16px}
+
+#app{display:none;flex-direction:column;height:100%}.top{background:#fff;padding:8px;border-bottom:3px solid var(--p)}
+.row{display:flex;gap:5px;align-items:flex-end;flex-wrap:wrap;margin-bottom:8px}
+.fld{display:flex;flex-direction:column}label{font-size:10px;font-weight:700;color:#475569}
+input,select{padding:5px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:0}
+.bar{background:#e2e8f0;padding:8px;display:flex;gap:10px;align-items:center}
+.btn{padding:6px 12px;border:0;border-radius:4px;color:#fff;font-weight:700;cursor:pointer;font-size:12px}
+main{flex:1;overflow:auto;padding:8px}table{border-collapse:collapse;background:#fff;width:max-content;margin:0 auto;font-size:11px}
+th,td{border:1px solid #475569;padding:6px 8px;text-align:center}th{background:#1e293b;color:#fff}
+.ann-row{background:#f0fdf4;font-weight:700;color:var(--p)}
+.input-error{border:2px solid var(--d)!important; background-color: var(--err)!important;}
+
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;overflow-y:auto;padding:20px}
+.card-content{background:#fff;width:auto;min-width:680px;max-width:850px;margin:0 auto;padding:25px;border-radius:2px;box-shadow:0 0 15px rgba(0,0,0,0.5);text-align:center}
+/* PDF ሲወጣ እያንዳንዱ ካርድ አዲስ ገጽ እንዲጀምር */
+.page-break { page-break-after: always; }
+
+.card-header-main{border:2.5px solid #000;padding:5px 25px;margin-bottom:5px;font-weight:900;font-size:20px;display:inline-block;text-transform:uppercase}
+.card-header-sub{font-weight:700;font-size:14px;margin-bottom:15px;text-decoration:underline}
+.main-card-border{border:2px solid #000;padding:15px;text-align:left}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:15px;font-size:14px}
+.card-table{width:100%;border-collapse:collapse;margin-bottom:10px}
+.card-table th, .card-table td{border:1.5px solid #000;padding:4px 8px;text-align:center;font-size:12px;width:1%;white-space:nowrap}
+.subj-cell{font-weight:700;background:#f9f9f9}
+.decision-box{border:1.5px solid #000;padding:10px;background:#f8fafc;font-weight:700;margin-top:5px;font-size:14px; line-height:1.6}
+.footer-sig{display:flex;justify-content:space-between;margin-top:20px}
+.sig-item{text-align:center;width:30%;font-size:11px}.sig-line{border-bottom:1px dotted #000;margin-bottom:4px;height:18px}
+
+@media print{.no-print{display:none!important}#modal{position:absolute;top:0;background:#fff;padding:0}.card-content{box-shadow:none;border:0;width:100%}}
 </style>
 </head>
 <body>
+
 <div id="login">
-    <div class="login-header"><h2>DIA Grade Pro</h2></div>
-    <input type="password" id="passInput" placeholder="ይለፍ ቃል / Password">
-    <button class="login-btn" onclick="checkPass()">LOGIN / ክፈት</button>
+    <div class="login-box">
+        <h2>DIA GRADE PRO</h2>
+        <input type="password" id="passInput" placeholder="ይለፍ ቃል ያስገቡ">
+        <button class="login-btn" onclick="checkLogin()">LOGIN</button>
+    </div>
 </div>
+
 <div id="app">
     <div class="top">
         <div class="row">
-            <input type="text" id="h_s" value="DILIGENT INTELLECTUALS ACADEMY" style="width:230px">
-            <select id="h_m" onchange="init()"><option value="semester">Semester</option><option value="quarter">Quarter</option></select>
-            <input type="text" id="h_g" value="Grade 4" style="width:70px">
-            <input type="text" id="h_b" value="Math, English, Amharic, Science, IT" style="width:200px">
-            <button class="btn" style="background:var(--p)" onclick="init()">SETUP</button>
-            <button class="btn" style="background:#475569" onclick="changePass()">SET PASS 🔑</button>
+            <input type="text" id="h_s" value="DILIGENT INTELLECTUALS ACADEMY" style="width:250px">
+            <select id="h_m" onchange="initApp()"><option value="semester">Semester</option><option value="quarter">Quarter</option></select>
+            <input type="text" id="h_g" value="Grade 4" style="width:80px">
+            <input type="text" id="h_b" value="Math, English, Amharic, Science, IT" style="width:230px" onchange="initApp()">
+            <button class="btn" style="background:var(--s)" onclick="addSubject()">+ ጨምር</button>
+            <button class="btn" style="background:var(--d)" onclick="removeSubject()">- ቀንስ</button>
+            <button class="btn" style="background:var(--p)" onclick="initApp()">SET UP</button>
             <button class="btn" style="background:var(--d)" onclick="location.reload()">LOCK 🔒</button>
         </div>
-        <div class="row" style="border-top:1px solid #eee;padding-top:8px">
-            <input type="hidden" id="e_k" value="-1">
-            <div class="fld"><label>ተ.ቁ / No</label><input type="number" id="e_n" style="width:40px"></div>
-            <div class="fld"><label>ስም / Name</label><input type="text" id="e_m" style="width:160px"></div>
-            <div class="fld"><label>ጾታ / Sex</label><select id="e_x"><option value="">-</option><option value="M">M</option><option value="F">F</option></select></div>
-            <div class="fld"><label>ዕድሜ / Age</label><input type="number" id="e_a" style="width:45px"></div>
-            <div class="fld"><label>Term</label><select id="e_t"></select></div>
-            <div class="fld"><label>ፀባይ / Cond.</label><select id="e_c"><option>A</option><option>B</option><option>C</option></select></div>
-            <div id="mks" style="display:flex;gap:3px"></div>
-            <button class="btn" style="background:var(--s)" id="svBtn" onclick="save()">SAVE</button>
-            <button class="btn" style="background:#f59e0b" onclick="resetForm()">CLEAR</button>
+        <div class="row" style="border-top:1px solid #eee;padding-top:10px">
+            <input type="hidden" id="e_id" value="-1">
+            <div class="fld"><label>ID</label><input type="number" id="e_n" class="req" style="width:55px"></div>
+            <div class="fld"><label>ተማሪ ስም</label><input type="text" id="e_m" class="req" style="width:160px"></div>
+            <div class="fld"><label>ጾታ</label><select id="e_x"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+            <div class="fld"><label>ዕድሜ</label><input type="number" id="e_a" class="req" style="width:45px"></div>
+            <div class="fld"><label>Terms</label><select id="e_t"></select></div>
+            <div class="fld"><label>ፀባይ</label><select id="e_c"><option>A</option><option>B</option><option>C</option></select></div>
+            <div class="fld"><label>አስተያየት</label><input type="text" id="e_com" style="width:120px"></div>
+            <div id="subjectInputs" style="display:flex;gap:4px"></div>
+            <button class="btn" style="background:var(--s)" id="saveBtn" onclick="saveData()">SAVE</button>
         </div>
     </div>
+
     <div class="bar">
-        <button class="btn" style="background:var(--p)" onclick="exportData()">BACKUP</button>
-        <button id="undoBtn" class="btn" style="background:#f59e0b;display:none" onclick="undo()">UNDO ↩️</button>
-        <div id="msg" style="flex:1;text-align:center;font-weight:700;color:var(--d)"></div>
-        <input type="text" id="q" placeholder="🔍 ፈልግ / Search..." onkeyup="render()" style="width:180px">
+        <button class="btn" style="background:#475569" onclick="exportJSON()">BACKUP ⬇️</button>
+        <button class="btn" style="background:#6366f1" onclick="document.getElementById('fileInp').click()">IMPORT ⬆️</button>
+        <input type="file" id="fileInp" style="display:none" onchange="importJSON(event)">
+        <button class="btn" style="background:var(--p)" onclick="generateFullPDF()">PDF ሮስተር እና ካርዶች 📄</button>
+        
+        <div id="statusMsg" style="flex:1;text-align:center;font-weight:bold;"></div>
+        <input type="text" id="searchQ" placeholder="🔍 ስም ፈልግ..." onkeyup="renderTable()" style="width:200px">
+        <button class="btn" style="background:#475569; margin-left:10px" onclick="clearAllData()">CLEAR ALL 🗑️</button>
     </div>
-    <main><table><thead><tr id="th"></tr></thead><tbody id="tb"></tbody></table></main>
+    <main><table id="mainTable"></table></main>
 </div>
+
+<div id="hidden-export-container" style="display:none;"></div>
+
 <div id="modal">
-    <div class="no-p" style="text-align:center;margin-bottom:10px"><button class="btn" style="background:var(--d)" onclick="closeM()">CLOSE</button><button class="btn" style="background:var(--s)" onclick="window.print()">PRINT</button></div>
-    <div id="cc"></div>
+    <div class="no-print" style="text-align:center;margin-bottom:15px">
+        <button class="btn" style="background:var(--d)" onclick="closeModal()">CLOSE</button>
+        <button class="btn" style="background:var(--s)" onclick="window.print()">PRINT</button>
+    </div>
+    <div id="cardView"></div>
 </div>
+
 <script>
-// Default Hidden Password (አሁን 1406 ሆኗል)
-const _DEF_P = "\x31\x34\x30\x36"; 
-const K='_DIA_DATA_V29', PK='_DIA_PASS'; 
-let D=JSON.parse(localStorage.getItem(K))||[],S=[],lastDeleted=null;
+const DB_KEY = '_DIA_DATA_V80';
+let DATA = JSON.parse(localStorage.getItem(DB_KEY)) || [];
+let SUBJECTS = [];
+let LAST_DELETED = null;
 
-function checkPass(){
-    const input = document.getElementById('passInput').value;
-    const savedPass = localStorage.getItem(PK) || _DEF_P;
-    if(input === savedPass){
-        document.getElementById('login').style.display='none';
-        document.getElementById('app').style.display='flex';
-        init();
-    } else { alert("የተሳሳተ ይለፍ ቃል!"); }
+function checkLogin() {
+    if(document.getElementById('passInput').value === "1406") {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        initApp();
+    } else alert("Incorrect Password!");
 }
 
-function changePass(){
-    const current = localStorage.getItem(PK) || _DEF_P;
-    const old = prompt("የድሮውን ይለፍ ቃል ያስገቡ (Old Pass):");
-    if(old === current){
-        const nw = prompt("አዲሱን ይለፍ ቃል ያስገቡ (New Pass):");
-        if(nw && nw.length >= 4){
-            localStorage.setItem(PK, nw);
-            alert("ይለፍ ቃል ተቀይሯል! / Password Changed!");
-        } else { alert("ይለፍ ቃል ቢያንስ 4 ቁጥር መሆን አለበት!"); }
-    } else { alert("የድሮው ይለፍ ቃል ተሳስቷል!"); }
+function initApp() {
+    SUBJECTS = document.getElementById('h_b').value.split(',').map(s => s.trim()).filter(s => s);
+    const mode = document.getElementById('h_m').value;
+    document.getElementById('e_t').innerHTML = mode === 'semester' 
+        ? '<option value="1">S1</option><option value="2">S2</option>'
+        : '<option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option>';
+    
+    document.getElementById('subjectInputs').innerHTML = SUBJECTS.map((s, i) => `
+        <div class="fld">
+            <label>${s}</label>
+            <input type="number" class="mark-input req" id="m_${i}" data-subj="${s}" 
+            onkeydown="handleKey(event, ${i})" oninput="valInput(this)" style="width:40px;text-align:center">
+        </div>
+    `).join('');
+    if(document.getElementById('e_id').value === "-1") document.getElementById('e_n').value = getNextID();
+    renderTable();
 }
 
-function init(){S=document.getElementById('h_b').value.split(',').map(x=>x.trim()).filter(x=>x);const m=document.getElementById('h_m').value;document.getElementById('e_t').innerHTML=m==='semester'?'<option value="1">S1</option><option value="2">S2</option>':'<option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option>';document.getElementById('mks').innerHTML=S.map((s,i)=>`<div class="fld"><label>${s}</label><input type="number" class="mi" id="m_${i}" data-s="${s}" oninput="if(this.value.length>=2) jump(${i})" style="width:45px;text-align:center"></div>`).join('');if(document.getElementById('e_k').value==="-1")document.getElementById('e_n').value=gn();render()}
-function jump(i){const nxt=document.getElementById(`m_${i+1}`);if(nxt)nxt.focus();else document.getElementById('svBtn').focus()}
-function gn(){const n=D.map(x=>parseFloat(x.no)).filter(v=>!isNaN(v));return n.length?Math.max(...n)+1:1}
-function gr(v,l){if(!l||!l.length)return"-";const s=[...new Set(l)].sort((a,b)=>b-a);return(s.indexOf(v)+1)+"/"+l.length}
-function save(){const n=document.getElementById('e_m'),a=document.getElementById('e_a'),x=document.getElementById('e_x'),t=document.getElementById('e_t'),k=document.getElementById('e_k').value,c=document.getElementById('e_c').value;if(!n.value.trim()||!x.value||!a.value){msg.innerText="⚠️ መረጃ ጎድሏል!";return}let ms={},tot=0,err=0;document.querySelectorAll('.mi').forEach(i=>{if(!i.value)err=1;let v=parseFloat(i.value)||0;ms[i.dataset.s]=v;tot+=v});if(err){msg.innerText="⚠️ ውጤት ይሙሉ!";return}const obj={id:k==="-1"?Date.now():parseFloat(k),no:document.getElementById('e_n').value,name:n.value.trim(),sex:x.value,age:a.value,grade:document.getElementById('h_g').value,mode:document.getElementById('h_m').value,term:parseInt(t.value),conduct:c,marks:ms,total:tot,avg:tot/S.length};if(k==="-1")D.push(obj);else D[D.findIndex(x=>x.id==k)]=obj;localStorage.setItem(K,JSON.stringify(D));msg.style.color="var(--s)";msg.innerText="✅ ተቀምጧል!";setTimeout(()=>msg.innerText="",1200);if(k==="-1"&&parseInt(t.value)<(document.getElementById('h_m').value==='semester'?2:4)){t.value=parseInt(t.value)+1;document.querySelectorAll('.mi').forEach(i=>i.value="");document.getElementById('m_0').focus()}else{resetForm()}render()}
-function del(id){if(confirm("ይህ መረጃ እንዲጠፋ እርግጠኛ ነዎት?")){lastDeleted=D.find(x=>x.id==id);D=D.filter(x=>x.id!=id);localStorage.setItem(K,JSON.stringify(D));document.getElementById('undoBtn').style.display='inline-block';render()}}
-function undo(){if(lastDeleted){D.push(lastDeleted);localStorage.setItem(K,JSON.stringify(D));lastDeleted=null;document.getElementById('undoBtn').style.display='none';render()}}
-function resetForm(){document.getElementById('e_k').value="-1";document.getElementById('e_m').value="";document.getElementById('e_x').value="";document.getElementById('e_a').value="";document.getElementById('e_t').value=1;document.querySelectorAll('.mi').forEach(i=>i.value="");document.getElementById('e_n').value=gn()}
-function render(){const b=document.getElementById('tb'),m=document.getElementById('h_m').value,f=document.getElementById('q').value.toLowerCase();document.getElementById('th').innerHTML=`<th>ተ.ቁ / No</th><th>ስም / Name</th><th>ጾታ / Sex</th><th>Term</th>${S.map(s=>`<th>${s}</th>`).join('')}<th>ጠቅላላ / Total</th><th>አማካይ / Avg</th><th>ደረጃ / Rk</th><th>Act</th>`;const ns=[...new Set(D.filter(x=>x.mode===m&&x.name.toLowerCase().includes(f)).map(x=>x.name))];b.innerHTML="";const al=ns.map(n=>{const d=D.filter(x=>x.name===n&&x.mode===m);return d.reduce((s,r)=>s+r.avg,0)/d.length});ns.forEach(n=>{const sd=D.filter(x=>x.name===n&&x.mode===m).sort((a,b)=>a.term-b.term),tr=sd.length+1;sd.forEach((r,i)=>{const tl=D.filter(x=>x.term===r.term&&x.mode===m).map(x=>x.avg);let rw=`<tr>`;if(i===0)rw+=`<td rowspan="${tr}">${r.no}</td><td rowspan="${tr}" style="text-align:left">${r.name}</td><td rowspan="${tr}">${r.sex}</td>`;rw+=`<td>T${r.term}</td>${S.map(s=>`<td>${r.marks[s]||0}</td>`).join('')}<td>${r.total.toFixed(0)}</td><td>${r.avg.toFixed(1)}</td><td>${gr(r.avg,tl)}</td><td><button onclick="edit(${r.id})">✏️</button><button onclick="del(${r.id})">🗑️</button></td></tr>`;b.innerHTML+=rw});const av=sd.reduce((s,r)=>s+r.avg,0)/sd.length,at=sd.reduce((s,r)=>s+r.total,0)/sd.length;b.innerHTML+=`<tr class="ann"><td><b>ANN</b></td>${S.map(s=>`<td>${(sd.reduce((u,r)=>u+(r.marks[s]||0),0)/sd.length).toFixed(0)}</td>`).join('')}<td>${at.toFixed(0)}</td><td>${av.toFixed(1)}</td><td>${gr(av,al)}</td><td><button class="btn" style="background:var(--p)" onclick="card('${n}')">CARD</button></td></tr>`})}
-function edit(id){const r=D.find(x=>x.id==id);document.getElementById('e_k').value=r.id;document.getElementById('e_m').value=r.name;document.getElementById('e_n').value=r.no;document.getElementById('e_x').value=r.sex;document.getElementById('e_a').value=r.age;document.getElementById('e_t').value=r.term;document.getElementById('e_c').value=r.conduct||'A';S.forEach((s,i)=>{if(document.getElementById(`m_${i}`))document.getElementById(`m_${i}`).value=r.marks[s]});render();document.getElementById('m_0').focus()}
-function card(n){const m=document.getElementById('h_m').value,sd=D.filter(x=>x.name===n&&x.mode===m).sort((a,b)=>a.term-b.term),tc=m==='semester'?[1,2]:[1,2,3,4],av=sd.reduce((s,r)=>s+r.avg,0)/sd.length,at=sd.reduce((s,r)=>s+r.total,0)/sd.length,al=[...new Set(D.filter(x=>x.mode===m).map(x=>x.name))].map(nm=>{const d=D.filter(x=>x.name===nm&&x.mode===m);return d.reduce((s,r)=>s+r.avg,0)/d.length});const ng=(parseInt(sd[0].grade.replace(/\D/g,''))||0)+1,isF=sd[0].sex==='F';const pT=av>=50?(isF?`ውጤቱ ከ50% በላይ በመሆኑ ወደ ${ng}ኛ ክፍል ተዘዋውራለች`:`ውጤቱ ከ50% በላይ በመሆኑ ወደ ${ng}ኛ ክፍል ተዘዋውሯል`):(isF?`ውጤቱ ከ50% በታች በመሆኑ አልተዘዋወረችም`:`ውጤቱ ከ50% በታች በመሆኑ አልተዘዋወረም`);document.getElementById('cc').innerHTML=`<div class="card"><div class="fitted-box">${document.getElementById('h_s').value}</div><br><div class="fitted-box" style="font-size:16px">STUDENT PROGRESS REPORT CARD (2018 E.C)</div><div class="i-g"><div>የተማሪው ስም / Name: <b>${n}</b></div><div>ጾታ / Sex: <b>${sd[0].sex}</b></div><div>ዕድሜ / Age: <b>${sd[0].age}</b></div><div>ክፍል / Grade: <b>${sd[0].grade}</b></div><div>መለያ ቁጥር / ID No: <b>${sd[0].no}</b></div><div>አማካይ / Avg: <b>${av.toFixed(1)}%</b></div></div><table class="c-t"><thead><tr><th style="width:200px">ትምህርቶች / SUBJECTS</th>${tc.map(t=>`<th>T${t}</th>`).join('')}<th>ዓመታዊ አማካይ / Ann. Avg</th></tr></thead><tbody>${S.map(s=>{const sc=(sd.reduce((u,r)=>u+(r.marks[s]||0),0)/sd.length).toFixed(1);return `<tr><td style="text-align:left"><b>${s}</b></td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.marks[s]??'-'}</td>`).join('')}<td><b>${sc}</b></td></tr>`}).join('')}<tr style="background:#eee;font-weight:700"><td>ጠቅላላ ውጤት / TOTAL SCORE</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.total.toFixed(0)??'-'}</td>`).join('')}<td>${at.toFixed(0)}</td></tr><tr style="background:#f9f9f9;font-weight:700"><td>አማካይ (%) / AVERAGE</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.avg.toFixed(1)??'-'}%</td>`).join('')}<td>${av.toFixed(1)}%</td></tr><tr style="font-weight:700"><td>ደረጃ / RANK</td>${tc.map(t=>`<td>${gr(sd.find(x=>x.term==t)?.avg,D.filter(x=>x.term==t&&x.mode==m).map(x=>x.avg))}</td>`).join('')}<td>${gr(av,al)}</td></tr><tr style="font-style:italic"><td>ፀባይ / CONDUCT</td>${tc.map(t=>`<td>${sd.find(x=>x.term==t)?.conduct??'-'}</td>`).join('')}<td>-</td></tr></tbody></table><div class="p-b">${pT} (Promoted/Detained)</div><div class="sig-wrap"><div class="sig-box"><div class="sig-line"></div><div>የክፍል ተጠሪ መ/ር ፊርማ <br> Homeroom Teacher Sign</div></div><div class="sig-box"><div class="sig-line"></div><div>የርዕሰ መምህር ፊርማ <br> Principal Sign</div></div></div></div>`;document.getElementById('modal').style.display='block'}
-function closeM(){document.getElementById('modal').style.display='none'}
-function exportData(){const b=new Blob([JSON.stringify(D)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`DIA_Backup.json`;a.click()}
+function addSubject() {
+    let sName = prompt("የአዲሱን ትምህርት ስም ያስገቡ (ለምሳሌ፦ Civics):");
+    if (sName) {
+        let current = document.getElementById('h_b').value;
+        document.getElementById('h_b').value = current ? current + ", " + sName : sName;
+        initApp();
+    }
+}
+
+function removeSubject() {
+    let current = document.getElementById('h_b').value.split(',').map(s => s.trim());
+    if (current.length > 0) {
+        let removed = current.pop();
+        document.getElementById('h_b').value = current.join(', ');
+        initApp();
+        alert(removed + " ተሰርዟል");
+    }
+}
+
+function handleKey(e, idx) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        let el = document.getElementById(`m_${idx}`);
+        let v = parseFloat(el.value);
+        if (isNaN(v) || v < 0 || v > 100) {
+            document.getElementById('statusMsg').innerText = "⚠️ እባክዎን ትክክለኛ ውጤት ያስገቡ!";
+            el.focus();
+        } else {
+            let next = document.getElementById(`m_${idx + 1}`);
+            if (next) next.focus();
+            else saveData();
+        }
+    }
+}
+
+function valInput(el) {
+    let v = el.value;
+    let msg = document.getElementById('statusMsg');
+    if (v === "") { el.classList.remove('input-error'); msg.innerText = ""; return; }
+    let num = parseFloat(v);
+    if (isNaN(num) || num < 0 || num > 100) {
+        el.classList.add('input-error');
+        msg.innerText = "⚠️ ስህተት: ውጤት ከ 0 እስከ 100 መሆን አለበት!";
+        msg.style.color = "red";
+    } else {
+        el.classList.remove('input-error');
+        msg.innerText = "✅ ትክክል"; msg.style.color = "green";
+        if (v.length >= 2 && num >= 10) {
+             let currentIdx = parseInt(el.id.split('_')[1]);
+             let next = document.getElementById(`m_${currentIdx + 1}`);
+             if (next) setTimeout(() => next.focus(), 400); 
+        }
+    }
+}
+
+function getNextID() {
+    const ids = DATA.map(d => parseFloat(d.no)).filter(n => !isNaN(n));
+    return ids.length ? Math.max(...ids) + 1 : 1;
+}
+
+function saveData() {
+    let hasError = false;
+    document.querySelectorAll('.req').forEach(el => {
+        if(!el.value.trim()) { el.classList.add('input-error'); hasError = true; }
+        else el.classList.remove('input-error');
+    });
+    if(hasError) { return; }
+    
+    const term = parseInt(document.getElementById('e_t').value);
+    const idVal = document.getElementById('e_id').value;
+    let marks = {}, total = 0;
+    document.querySelectorAll('.mark-input').forEach(inp => {
+        let v = parseFloat(inp.value) || 0;
+        marks[inp.dataset.subj] = v;
+        total += v;
+    });
+
+    const entry = {
+        id: idVal === "-1" ? Date.now() : parseFloat(idVal),
+        no: document.getElementById('e_n').value,
+        name: document.getElementById('e_m').value, sex: document.getElementById('e_x').value, age: document.getElementById('e_a').value,
+        grade: document.getElementById('h_g').value, mode: document.getElementById('h_m').value,
+        term: term, conduct: document.getElementById('e_c').value, comment: document.getElementById('e_com').value,
+        marks: marks, total: total, avg: total / SUBJECTS.length
+    };
+
+    if(idVal === "-1") DATA.push(entry);
+    else DATA[DATA.findIndex(d => d.id == idVal)] = entry;
+
+    saveToLocal();
+    const maxT = document.getElementById('h_m').value === 'semester' ? 2 : 4;
+    if(term < maxT && idVal === "-1") {
+        document.getElementById('e_t').value = term + 1;
+        document.querySelectorAll('.mark-input').forEach(inp => inp.value = "");
+        document.getElementById('m_0').focus();
+    } else {
+        resetForm();
+        document.getElementById('e_m').focus();
+    }
+    renderTable();
+}
+
+function deleteRec(id) {
+    if(confirm("ይህ መረጃ ይጥፋ?")) {
+        LAST_DELETED = DATA.find(d => d.id == id);
+        DATA = DATA.filter(d => d.id != id);
+        saveToLocal(); renderTable();
+    }
+}
+
+function clearAllData() {
+    if(confirm("ማስጠንቀቂያ! ሁሉንም መረጃዎች ማጥፋት ትፈልጋለህ?")) {
+        DATA = []; saveToLocal(); renderTable();
+    }
+}
+
+function saveToLocal() { localStorage.setItem(DB_KEY, JSON.stringify(DATA)); }
+
+function resetForm() {
+    document.getElementById('e_id').value = "-1";
+    document.getElementById('e_m').value = ""; document.getElementById('e_a').value = "";
+    document.querySelectorAll('.mark-input').forEach(inp => inp.value = "");
+    document.getElementById('e_n').value = getNextID();
+    document.getElementById('e_t').value = "1";
+}
+
+function renderTable() {
+    const table = document.getElementById('mainTable');
+    const mode = document.getElementById('h_m').value;
+    const q = document.getElementById('searchQ').value.toLowerCase();
+    let html = `<thead><tr><th>ID</th><th>Name</th><th>Sex</th><th>Term</th>${SUBJECTS.map(s => `<th>${s}</th>`).join('')}<th>Total</th><th>Avg</th><th>Rank</th><th>Act</th></tr></thead><tbody>`;
+    const ids = [...new Set(DATA.filter(d => d.mode === mode && d.name.toLowerCase().includes(q)).map(d => d.no))];
+    ids.forEach(no => {
+        const recs = DATA.filter(d => d.no === no && d.mode === mode).sort((a,b) => a.term - b.term);
+        const rSpan = recs.length + 1;
+        recs.forEach((r, idx) => {
+            const tList = DATA.filter(d => d.mode === mode && d.term === r.term).map(d => d.avg);
+            html += `<tr>`;
+            if(idx === 0) html += `<td rowspan="${rSpan}">${r.no}</td><td rowspan="${rSpan}" style="text-align:left">${r.name}</td><td rowspan="${rSpan}">${r.sex}</td>`;
+            html += `<td>T${r.term}</td>${SUBJECTS.map(s => `<td>${r.marks[s] || 0}</td>`).join('')}<td>${r.total.toFixed(0)}</td><td>${r.avg.toFixed(1)}</td><td>${getRank(r.avg, tList)}</td>
+            <td><button onclick="editRec(${r.id})">✏️</button><button style="color:red" onclick="deleteRec(${r.id})">🗑️</button></td></tr>`;
+        });
+        if(recs.length > 0) {
+            const aAvg = recs.reduce((s, r) => s + r.avg, 0) / recs.length;
+            const aTot = recs.reduce((s, r) => s + r.total, 0) / recs.length;
+            const aList = ids.map(id => {
+                const rs = DATA.filter(d => d.no === id && d.mode === mode);
+                return rs.reduce((s, r) => s + r.avg, 0) / rs.length;
+            });
+            html += `<tr class="ann-row"><td>ANN</td>${SUBJECTS.map(s => `<td>${(recs.reduce((u, r) => u + (r.marks[s] || 0), 0) / recs.length).toFixed(0)}</td>`).join('')}<td>${aTot.toFixed(0)}</td><td>${aAvg.toFixed(1)}</td><td>${getRank(aAvg, aList)}</td><td><button class="btn" style="background:var(--p)" onclick="showCard('${no}')">CARD</button></td></tr>`;
+        }
+    });
+    table.innerHTML = html + `</tbody>`;
+}
+
+function getRank(v, l) {
+    const u = [...new Set(l)].sort((a, b) => b - a);
+    return (u.indexOf(v) + 1) + "/" + l.length;
+}
+
+function editRec(id) {
+    const r = DATA.find(d => d.id == id);
+    document.getElementById('e_id').value = r.id; document.getElementById('e_n').value = r.no;
+    document.getElementById('e_m').value = r.name; document.getElementById('e_x').value = r.sex;
+    document.getElementById('e_a').value = r.age; document.getElementById('e_t').value = r.term;
+    document.getElementById('e_c').value = r.conduct; document.getElementById('e_com').value = r.comment || "";
+    SUBJECTS.forEach((s, i) => { let inp = document.getElementById(`m_${i}`); if(inp) inp.value = r.marks[s]; });
+}
+
+// ------------------- PDF ማመንጫ አዲሱ ክፍል -------------------
+
+function generateFullPDF() {
+    const mode = document.getElementById('h_m').value;
+    const exportContainer = document.getElementById('hidden-export-container');
+    exportContainer.innerHTML = ''; // ጽዳት
+    exportContainer.style.display = 'block';
+
+    // 1. ሮስተሩን ማዘጋጀት
+    const mainTableClone = document.getElementById('mainTable').cloneNode(true);
+    // የ Act (Action) አምድ ማስወገድ
+    mainTableClone.querySelectorAll('th:last-child, td:last-child').forEach(el => el.remove());
+    
+    const rosterDiv = document.createElement('div');
+    rosterDiv.className = 'page-break';
+    rosterDiv.innerHTML = `<h2 style="text-align:center">${document.getElementById('h_s').value} - Full Roster</h2>`;
+    rosterDiv.appendChild(mainTableClone);
+    exportContainer.appendChild(rosterDiv);
+
+    // 2. የእያንዳንዱን ተማሪ ካርድ ማዘጋጀት
+    const ids = [...new Set(DATA.filter(d => d.mode === mode).map(d => d.no))];
+    
+    ids.forEach(no => {
+        const recs = DATA.filter(d => d.no === no && d.mode === mode).sort((a,b) => a.term - b.term);
+        if(recs.length) {
+            const cardHtml = createCardHTML(no, mode, recs);
+            const cardWrapper = document.createElement('div');
+            cardWrapper.className = 'page-break';
+            cardWrapper.innerHTML = cardHtml;
+            exportContainer.appendChild(cardWrapper);
+        }
+    });
+
+    // 3. ወደ PDF መቀየር
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: 'DIA_Full_Records.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(exportContainer).save().then(() => {
+        exportContainer.style.display = 'none';
+    });
+}
+
+function createCardHTML(no, mode, recs) {
+    const terms = mode === 'semester' ? [1, 2] : [1, 2, 3, 4];
+    const annAvg = recs.reduce((s, r) => s + r.avg, 0) / recs.length;
+    const annTot = recs.reduce((s, r) => s + r.total, 0) / recs.length;
+
+    let tableHtml = `<table class="card-table"><thead><tr><th class="subj-cell">SUBJECTS</th>${terms.map(t => `<th>T${t}</th>`).join('')}<th>Annual</th></tr></thead><tbody>`;
+    SUBJECTS.forEach(s => {
+        const sAnn = (recs.reduce((sum, r) => sum + (r.marks[s] || 0), 0) / recs.length).toFixed(1);
+        tableHtml += `<tr><td class="subj-cell">${s}</td>${terms.map(t => `<td>${recs.find(r => r.term == t)?.marks[s] ?? '-'}</td>`).join('')}<td><b>${sAnn}</b></td></tr>`;
+    });
+    tableHtml += `<tr style="background:#eee;font-weight:bold"><td>TOTAL</td>${terms.map(t => `<td>${recs.find(r => r.term == t)?.total.toFixed(0) ?? '-'}</td>`).join('')}<td>${annTot.toFixed(0)}</td></tr>`;
+    tableHtml += `<tr style="background:#f4f4f4;font-weight:bold"><td>AVG (%)</td>${terms.map(t => `<td>${recs.find(r => r.term == t)?.avg.toFixed(1) ?? '-'}%</td>`).join('')}<td>${annAvg.toFixed(1)}%</td></tr>`;
+    
+    const cardRanks = terms.map(t => {
+        const d = recs.find(r => r.term == t);
+        if(!d) return '-';
+        const tList = DATA.filter(x => x.mode == mode && x.term == t).map(x => x.avg);
+        return getRank(d.avg, tList);
+    });
+    tableHtml += `<tr style="font-weight:bold"><td>RANK</td>${cardRanks.map(rk => `<td>${rk}</td>`).join('')}<td>-</td></tr>`;
+    tableHtml += `<tr style="font-style:italic"><td>CONDUCT</td>${terms.map(t => `<td>${recs.find(r => r.term == t)?.conduct ?? '-'}</td>`).join('')}<td>-</td></tr></tbody></table>`;
+
+    const sex = recs[0].sex;
+    const curGradeNum = parseInt(recs[0].grade.replace(/\D/g, '')) || 0;
+    const nextGrade = curGradeNum + 1;
+    let decisionTxt = annAvg >= 50 
+        ? (sex === "Male" ? `<b>Promoted to:</b> Grade ${nextGrade} / ወደ Grade ${nextGrade} ተዘዋውሯል::` : `<b>Promoted to:</b> Grade ${nextGrade} / ወደ Grade ${nextGrade} ተዘዋውራለች::`)
+        : (sex === "Male" ? `<b>Stay in:</b> Grade ${curGradeNum} / Grade ${curGradeNum} ይደግማል::` : `<b>Stay in:</b> Grade ${curGradeNum} / Grade ${curGradeNum} ትደግማለች::`);
+
+    return `
+        <div class="card-content">
+            <div class="card-header-main">${document.getElementById('h_s').value}</div>
+            <div class="card-header-sub">STUDENT PROGRESS REPORT CARD</div>
+            <div class="main-card-border">
+                <div class="info-grid">
+                    <div>Name: <b>${recs[0].name}</b></div><div>Sex: <b>${recs[0].sex}</b></div>
+                    <div>ID: <b>${recs[0].no}</b></div><div>Grade: <b>${recs[0].grade}</b></div>
+                </div>
+                ${tableHtml}
+                <div class="decision-box">
+                    ${decisionTxt}<br>
+                    <b>Comment:</b> <i>${recs[recs.length-1].comment || 'ጥሩ ጥረት ነው::'}</i>
+                </div>
+                <div class="footer-sig">
+                    <div class="sig-item"><div class="sig-line"></div>Parent's Signature</div>
+                    <div class="sig-item"><div class="sig-line"></div>Class Teacher</div>
+                    <div class="sig-item"><div class="sig-line"></div>Director</div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function showCard(no) {
+    const mode = document.getElementById('h_m').value;
+    const recs = DATA.filter(d => d.no === no && d.mode === mode).sort((a,b) => a.term - b.term);
+    if(!recs.length) return;
+    document.getElementById('cardView').innerHTML = createCardHTML(no, mode, recs);
+    document.getElementById('modal').style.display = 'block';
+}
+
+function closeModal() { document.getElementById('modal').style.display = 'none'; }
+function exportJSON() {
+    const blob = new Blob([JSON.stringify(DATA)], {type: 'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'DIA_Backup.json'; a.click();
+}
+function importJSON(e) {
+    const file = e.target.files[0];
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => { DATA = JSON.parse(ev.target.result); saveToLocal(); renderTable(); };
+        reader.readAsText(file);
+    }
+}
 </script>
 </body>
 </html>
